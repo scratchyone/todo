@@ -1,0 +1,48 @@
+.animate-color {
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+.remove-button {
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+.add-button {
+    transition-property: color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    outline: none !important;
+}
+
+.remove-button {
+    outline: none !important;
+}
+
+.list-item {
+    transition-property: color, text-decoration-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+    text-decoration: line-through;
+}
+
+.header {
+    font-family: sans-serif;
+    font-weight: normal;
+}
+
+.add-input {
+    outline: none;
+}
+
+.item-input {
+    transition-property: border;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+}
+
+button {
+    outline: none !important;
+}

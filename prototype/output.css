@@ -1,0 +1,161 @@
+html {
+  line-height: 1.15;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+a {
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+}
+button,
+input {
+  font-family: sans-serif;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  overflow: visible;
+}
+button {
+  text-transform: none;
+  -webkit-appearance: button;
+}
+button::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+button:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+html {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+h1 {
+  margin: 0;
+}
+button {
+  background: transparent;
+  padding: 0;
+}
+button:focus {
+  outline: 1px dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+}
+*,
+::before,
+::after {
+  border-width: 0;
+  border-style: solid;
+  border-color: #dae1e7;
+}
+button {
+  border-radius: 0;
+}
+button,
+input {
+  font-family: inherit;
+}
+button {
+  cursor: pointer;
+}
+body {
+  height: 100vh;
+  background-color: #f1f5f8;
+}
+.holder {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.box {
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 1.5rem 2rem 2rem;
+}
+.header {
+  font-size: 3rem;
+  color: #3d4852;
+  text-align: center;
+}
+.list-item {
+  text-decoration: none;
+  color: #22292f;
+}
+.list-item:hover {
+  color: #606f7b;
+}
+.remove-button:hover {
+  color: #e3342f;
+}
+.todos {
+  font-size: 1.125rem;
+}
+.item-input {
+  margin-top: 0.5rem;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 0.25rem;
+}
+.item-input:focus-within {
+  border-color: #8795a1;
+}
+.add-input {
+  padding: 0.25rem;
+  padding-right: 0;
+}
+.add-button {
+  margin: 0.5rem;
+  margin-left: 0;
+}
+.add-button:hover {
+  color: #38c172;
+}
+.animate-color {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.remove-button {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.add-button {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  outline: 0;
+}
+.list-item {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.header {
+  font-family: sans-serif;
+  font-weight: 400;
+}
+.add-input {
+  outline: 0;
+}

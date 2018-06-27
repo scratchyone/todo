@@ -1,0 +1,19 @@
+{
+  "name": "to-do",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://www.scratchyone.com/todo/",
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4",
+    "tailwind": "^2.2.0",
+    "tailwindcss": "^0.6.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

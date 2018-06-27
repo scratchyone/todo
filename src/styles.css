@@ -1,0 +1,61 @@
+@tailwind preflight;
+@tailwind utilities;
+body {
+  @apply .h-screen .bg-grey-lighter;
+}
+
+.holder {
+  @apply .mx-auto .h-screen .flex .justify-center .items-center;
+}
+
+.box {
+  @apply .bg-white .shadow-md .rounded .px-8 .pt-6 .pb-8 .mb-4;
+}
+
+.header {
+  @apply .text-5xl .text-grey-darkest .text-center;
+}
+
+.list-item {
+  @apply .no-underline .text-black;
+}
+
+.list-item:hover {
+  @apply .text-grey-darker;
+}
+
+.remove-button {
+  @apply mr-1;
+}
+
+.remove-button:hover {
+  @apply text-red;
+}
+
+.todos {
+  @apply .text-lg;
+}
+
+.item-input {
+  @apply .mt-2 .border-solid .border-2 .rounded flex;
+}
+
+.item-input:focus-within {
+  @apply .border-grey-dark;
+}
+
+.add-input {
+  @apply .p-1 .pr-0 .w-full;
+}
+
+.add-button {
+  @apply .m-2 .ml-1;
+}
+
+.add-button:hover {
+  @apply .text-green;
+}
+
+.no-tasks {
+  @apply .text-grey-darker;
+}
