@@ -54,7 +54,13 @@ class App extends React.Component {
                   />
                 )}
               />
-              <Route exact path="/" render={() => <SignUp />} />
+              <Route
+                exact
+                path="/"
+                render={() => {
+                  return <SignUp />;
+                }}
+              />
             </Switch>
           </div>
         </div>
@@ -191,11 +197,18 @@ class ToDoContainer extends React.Component {
     );
   }
 }
+class SignUp extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hi!</h1>
+      </div>
+    );
+  }
+}
 ReactDOM.render(
   <BrowserRouter>
     <App />
   </BrowserRouter>,
   document.getElementById('root')
 );
-
-class SignUp extends React.Component {}
