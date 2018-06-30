@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var Datastore = require('nedb'),
-  users = new Datastore();
+  users = new Datastore({ filename: 'users.db', autoload: true });
 var cors = require('cors');
 const uuidv1 = require('uuid/v1');
 var bcrypt = require('bcrypt');
@@ -43,13 +43,13 @@ app.post('/signin', (req, res) => {
             {},
             (err, numReplaced) => {}
           );
-          res.send({ authorized: true, sessionid: uuid });
+          res.send({ success: true, sessionid: uuid });
         } else {
-          res.send({ authorized: false, error: 'Username/password incorrect' });
+          res.send({ success: false, error: 'Username/password incorrect' });
         }
       });
     } else {
-      res.send({ authorized: false, error: 'Username/password incorrect' });
+      res.send({ success: false, error: 'Username/password incorrect' });
     }
   });
 });

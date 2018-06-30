@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './output.css';
 import './index.css';
 
@@ -33,22 +34,28 @@ class App extends React.Component {
       <div className="holder">
         <div>
           <div className="box">
-            <h1 className="header">To-Do</h1>
-            <Todos
-              crossout={i => {
-                this.crossout(i);
-              }}
-              remove={i => {
-                this.remove(i);
-              }}
-              items={this.state.todos}
-              first={this.state.keycount === 0}
-            />
-            <ItemInput
-              add={text => {
-                this.add(text);
-              }}
-            />
+            <Switch>
+              <Route
+                exact
+                path="/todo"
+                render={() => (
+                  <ToDoContainer
+                    keycount={this.state.keycount}
+                    todos={this.state.todos}
+                    add={text => {
+                      this.add(text);
+                    }}
+                    remove={i => {
+                      this.remove(i);
+                    }}
+                    crossout={i => {
+                      this.crossout(i);
+                    }}
+                  />
+                )}
+              />
+              <Route exact path="/" render={() => <SignUp />} />
+            </Switch>
           </div>
         </div>
       </div>
@@ -160,4 +167,35 @@ class ItemInput extends React.Component {
     );
   }
 }
-ReactDOM.render(<App />, document.getElementById('root'));
+class ToDoContainer extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1 className="header">To-Do</h1>
+        <Todos
+          crossout={i => {
+            this.props.crossout(i);
+          }}
+          remove={i => {
+            this.props.remove(i);
+          }}
+          items={this.props.todos}
+          first={this.props.keycount === 0}
+        />
+        <ItemInput
+          add={text => {
+            this.props.add(text);
+          }}
+        />
+      </div>
+    );
+  }
+}
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+
+class SignUp extends React.Component {}

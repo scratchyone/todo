@@ -68,7 +68,13 @@ function signin() {
     .then(response => {
       return response.json();
     })
-    .then(doc => {})
+    .then(doc => {
+      if (doc.success) {
+        location.reload();
+      } else {
+        document.getElementById('error').innerHTML = doc.error;
+      }
+    })
     .catch(function(err) {
       // Error :(
     });
@@ -90,7 +96,13 @@ function signup() {
     .then(response => {
       return response.json();
     })
-    .then(doc => {})
+    .then(doc => {
+      if (doc.success) {
+        location.reload();
+      } else {
+        document.getElementById('error').innerHTML = doc.error;
+      }
+    })
     .catch(function(err) {
       // Error :(
     });
