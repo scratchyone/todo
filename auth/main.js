@@ -4,47 +4,66 @@ const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var Datastore = require('nedb'),
   users = new Datastore();
+var cors = require('cors');
 const uuidv1 = require('uuid/v1');
 var bcrypt = require('bcrypt');
 app.use(bodyParser.json());
 app.use(cookieParser());
+var allowedOrigins = ['http://localhost:3000', 'http://localhost:8000'];
+app.use(
+  cors({
+    credentials: true,
+    origin: function(origin, callback) {
+      // allow requests with no origin
+      // (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          'The CORS policy for this site does not ' +
+          'allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    }
+  })
+);
 app.listen(3000, function() {
   console.log('listening on 3000');
 });
-app.get('/signin', (req, res) => {
-  users.findOne({ username: req.query.username }, (err, doc) => {
+app.post('/signin', (req, res) => {
+  users.findOne({ username: req.body.username }, (err, doc) => {
     if (doc) {
-      bcrypt.compare(req.query.password, doc.hashword, function(err, result) {
+      bcrypt.compare(req.body.password, doc.hashword, function(err, result) {
         if (result) {
           let uuid = uuidv1();
           res.cookie('sessionid', uuid, {});
           users.update(
-            { username: req.query.username },
+            { username: req.body.username },
             { $push: { sessions: uuid } },
             {},
             (err, numReplaced) => {}
           );
-          res.send('Signed in!');
+          res.send({ authorized: true, sessionid: uuid });
         } else {
-          res.send('Failed!');
+          res.send({ authorized: false, error: 'Username/password incorrect' });
         }
       });
     } else {
-      res.send('Failed!');
+      res.send({ authorized: false, error: 'Username/password incorrect' });
     }
   });
 });
-app.get('/signup', (req, res) => {
-  users.findOne({ username: req.query.username }, (err, doc) => {
+app.post('/signup', (req, res) => {
+  users.findOne({ username: req.body.username }, (err, doc) => {
     if (doc) {
-      res.send('Nope!');
+      res.send({ success: false, error: 'Account already exists' });
     } else {
-      bcrypt.hash(req.query.password, 10, function(err, hashword) {
-        bcrypt.hash(hashword + req.query.username, 10, function(err, hash) {
+      bcrypt.hash(req.body.password, 10, function(err, hashword) {
+        bcrypt.hash(hashword + req.body.username, 10, function(err, hash) {
           let uuid = uuidv1();
           users.insert(
             {
-              username: req.query.username,
+              username: req.body.username,
               hashword: hashword,
               id: hash,
               bio: '',
@@ -53,30 +72,59 @@ app.get('/signup', (req, res) => {
             () => {}
           );
           res.cookie('sessionid', uuid, {});
-          res.send('Signed Up! ' + hash + ' ' + uuid);
+          res.send({ success: true, sessionid: uuid });
         });
       });
     }
   });
 });
 
-app.get('/', (req, res) => {
+app.get('/info', (req, res) => {
   users.findOne({ sessions: req.cookies.sessionid }, function(err, doc) {
-    res.send(doc ? doc : 'Auth failed');
+    let newdoc = doc;
+    if (doc) newdoc.authorized = true;
+    res.send(
+      doc
+        ? {
+            authorized: true,
+            sessionid: doc.sessionid,
+            username: doc.username,
+            bio: doc.bio
+          }
+        : { authorized: false }
+    );
     console.log(err);
     console.log(doc == null);
   });
 });
 
-app.get('/setbio', (req, res) => {
+app.get('/', (req, res) => {
+  users.findOne({ sessions: req.cookies.sessionid }, function(err, doc) {
+    let newdoc = doc;
+    if (doc) newdoc.authorized = true;
+    res.send(
+      doc
+        ? { authorized: true, sessionid: doc.sessionid }
+        : { authorized: false }
+    );
+    console.log(err);
+    console.log(doc == null);
+  });
+});
+
+app.post('/setbio', (req, res) => {
   users.findOne({ sessions: req.cookies.sessionid }, (err, doc) => {
     users.update(
       { sessions: req.cookies.sessionid },
-      { $set: { bio: req.query.bio } },
+      { $set: { bio: req.body.bio } },
       {},
       (err, numReplaced => {})
     );
-    res.send(doc ? 'Bio set' : 'Auth failed');
+    res.send(
+      doc
+        ? { success: true }
+        : { success: false, error: 'Incorrect session id' }
+    );
   });
 });
 
@@ -85,14 +133,14 @@ app.get('/user', (req, res) => {
   let found = false;
   users.findOne({ username: req.query.username }, (err, doc) => {
     if (doc != null) {
-      res.send(doc.username + ': ' + doc.bio);
+      res.send({ success: true, username: doc.username, bio: doc.bio });
     } else {
-      res.send('No user found');
+      res.send({ success: false, error: 'User not found' });
     }
   });
 });
 
-app.get('/signout', (req, res) => {
+app.post('/signout', (req, res) => {
   users.update(
     { sessions: req.cookies.sessionid },
     { $pull: { sessions: req.cookies.sessionid } },
@@ -100,5 +148,5 @@ app.get('/signout', (req, res) => {
     (err, numReplaced) => {}
   );
   res.cookie('sessionid', '');
-  res.send('Signed out!');
+  res.send({ success: true });
 });
