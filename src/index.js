@@ -5,6 +5,12 @@ import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
 import { render } from 'react-snapshot';
+let api = 'https://vps.scratchyone.com/todo';
+if (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+)
+  api = 'http://localhost:3000';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +20,7 @@ class App extends React.Component {
     };
   }
   updatetodos(todos) {
-    fetch('https://vps.scratchyone.com/todo/settodos?', {
+    fetch(api + '/settodos?', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify({ todos: todos }),
@@ -32,7 +38,7 @@ class App extends React.Component {
       });
   }
   componentDidMount() {
-    fetch('https://vps.scratchyone.com/todo/info', {
+    fetch(api + '/info', {
       method: 'get',
       credentials: 'include'
     })
@@ -229,7 +235,7 @@ class ToDoContainer extends React.Component {
     };
   }
   componentDidMount() {
-    fetch('https://vps.scratchyone.com/todo/info', {
+    fetch(api + '/info', {
       method: 'get',
       credentials: 'include'
     })
@@ -246,7 +252,7 @@ class ToDoContainer extends React.Component {
       });
   }
   signout() {
-    fetch('https://vps.scratchyone.com/todo/signout?', {
+    fetch(api + '/signout?', {
       method: 'post',
       credentials: 'include'
     })
@@ -307,7 +313,7 @@ class SignUp extends React.Component {
   }
   signup(evt) {
     evt.target.blur();
-    fetch('https://vps.scratchyone.com/todo/signup?', {
+    fetch(api + '/signup?', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify({
@@ -334,7 +340,7 @@ class SignUp extends React.Component {
       });
   }
   componentDidMount() {
-    fetch('https://vps.scratchyone.com/todo/info', {
+    fetch(api + '/info', {
       method: 'get',
       credentials: 'include'
     })
@@ -415,7 +421,7 @@ class SignIn extends React.Component {
   }
   signin(evt) {
     evt.target.blur();
-    fetch('https://vps.scratchyone.com/todo/signin?', {
+    fetch(api + '/signin?', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify({
@@ -442,7 +448,7 @@ class SignIn extends React.Component {
       });
   }
   componentDidMount() {
-    fetch('https://vps.scratchyone.com/todo/info', {
+    fetch(api + '/info', {
       method: 'get',
       credentials: 'include'
     })
