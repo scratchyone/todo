@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
+import uuidv1 from './uuid.js';
 import { render } from 'react-snapshot';
 let api = 'https://vps.scratchyone.com/todo';
 if (
@@ -16,7 +17,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       todos: [],
-      keycount: 0
+      first: true,
+      fetchtodos: null
     };
   }
   updatetodos(todos) {
@@ -37,7 +39,7 @@ class App extends React.Component {
         // Error :(
       });
   }
-  componentDidMount() {
+  fetchtodos() {
     fetch(api + '/info', {
       method: 'get',
       credentials: 'include'
@@ -47,12 +49,54 @@ class App extends React.Component {
       })
       .then(doc => {
         if (doc.authorized) {
-          this.setState({ todos: doc.todos });
+          let newtodos = this.state.todos.concat(doc.todos);
+          let useduuids = [];
+          let removed = {};
+          let hidden = [];
+          newtodos = newtodos.filter(todo => {
+            removed[todo.key] = todo.hidden ? true : false;
+            if (todo.hidden) {
+              hidden.push(todo);
+            }
+            if (!useduuids.includes(todo.key)) {
+              useduuids.push(todo.key);
+              return true;
+            } else {
+              return false;
+            }
+          });
+          this.setState({
+            todos: newtodos
+          });
+          newtodos.map(item => {
+            if (removed[item.key]) {
+              let temp = item;
+              temp.hidden = true;
+              return temp;
+            } else {
+              return item;
+            }
+          });
+          if (useduuids.length === hidden.length) {
+            this.setState({
+              todos: []
+            });
+          }
         }
       })
       .catch(function(err) {
         // Error :(
       });
+  }
+  componentDidMount() {
+    this.fetchtodos();
+    let fetchtodos = window.setInterval(() => {
+      this.fetchtodos();
+    }, 1000);
+    this.setState({ fetchtodos: fetchtodos });
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.fetchtodos);
   }
   crossout(i) {
     let newtodos = this.state.todos;
@@ -63,15 +107,15 @@ class App extends React.Component {
 
   remove(i) {
     let newtodos = this.state.todos;
-    newtodos.splice(i, 1);
+    newtodos[i].hidden = true;
     this.setState({ todos: newtodos });
     this.updatetodos(newtodos);
   }
 
   add(text) {
     let newtodos = this.state.todos;
-    newtodos.push({ text: text, done: false, key: this.state.keycount });
-    this.setState({ todos: newtodos, keycount: this.state.keycount + 1 });
+    newtodos.push({ text: text, done: false, key: uuidv1() });
+    this.setState({ todos: newtodos, first: false });
     this.updatetodos(newtodos);
   }
   render() {
@@ -85,7 +129,7 @@ class App extends React.Component {
                 path="/todo"
                 render={() => (
                   <ToDoContainer
-                    keycount={this.state.keycount}
+                    first={this.state.first}
                     todos={this.state.todos}
                     add={text => {
                       this.add(text);
@@ -132,19 +176,21 @@ class Todos extends React.Component {
     ];
     let todos = [];
     for (let i in this.props.items) {
-      todos.push(
-        <Todo
-          crossout={() => {
-            this.props.crossout(i);
-          }}
-          remove={() => {
-            this.props.remove(i);
-          }}
-          item={this.props.items[i]}
-          key={this.props.items[i].key}
-          first={this.props.keycount === 0}
-        />
-      );
+      if (!this.props.items[i].hidden) {
+        todos.push(
+          <Todo
+            crossout={() => {
+              this.props.crossout(i);
+            }}
+            remove={() => {
+              this.props.remove(i);
+            }}
+            item={this.props.items[i]}
+            key={this.props.items[i].key}
+            first={this.props.first}
+          />
+        );
+      }
     }
     if (this.props.items.length === 0) {
       todos.push(
@@ -279,7 +325,7 @@ class ToDoContainer extends React.Component {
             this.props.remove(i);
           }}
           items={this.props.todos}
-          first={this.props.keycount === 0}
+          first={this.props.first}
         />
         <ItemInput
           add={text => {
