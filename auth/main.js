@@ -72,8 +72,7 @@ app.post('/signup', (req, res) => {
               hashword: hashword,
               id: hash,
               todos: [],
-              sessions: [uuid],
-              hidden: false
+              sessions: [uuid]
             },
             () => {}
           );

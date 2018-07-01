@@ -49,39 +49,9 @@ class App extends React.Component {
       })
       .then(doc => {
         if (doc.authorized) {
-          let newtodos = this.state.todos.concat(doc.todos);
-          let useduuids = [];
-          let removed = {};
-          let hidden = [];
-          newtodos = newtodos.filter(todo => {
-            removed[todo.key] = todo.hidden ? true : false;
-            if (todo.hidden) {
-              hidden.push(todo);
-            }
-            if (!useduuids.includes(todo.key)) {
-              useduuids.push(todo.key);
-              return true;
-            } else {
-              return false;
-            }
-          });
           this.setState({
-            todos: newtodos
+            todos: doc.todos
           });
-          newtodos.map(item => {
-            if (removed[item.key]) {
-              let temp = item;
-              temp.hidden = true;
-              return temp;
-            } else {
-              return item;
-            }
-          });
-          if (useduuids.length === hidden.length) {
-            this.setState({
-              todos: []
-            });
-          }
         }
       })
       .catch(function(err) {
