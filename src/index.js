@@ -14,7 +14,7 @@ class App extends React.Component {
     };
   }
   updatetodos(todos) {
-    fetch('http://localhost:3000/settodos?', {
+    fetch('https://vps.scratchyone.com/todo/settodos?', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify({ todos: todos }),
@@ -32,7 +32,7 @@ class App extends React.Component {
       });
   }
   componentDidMount() {
-    fetch('http://localhost:3000/info', {
+    fetch('https://vps.scratchyone.com/todo/info', {
       method: 'get',
       credentials: 'include'
     })
@@ -229,7 +229,7 @@ class ToDoContainer extends React.Component {
     };
   }
   componentDidMount() {
-    fetch('http://localhost:3000/info', {
+    fetch('https://vps.scratchyone.com/todo/info', {
       method: 'get',
       credentials: 'include'
     })
@@ -246,7 +246,7 @@ class ToDoContainer extends React.Component {
       });
   }
   signout() {
-    fetch('http://localhost:3000/signout?', {
+    fetch('https://vps.scratchyone.com/todo/signout?', {
       method: 'post',
       credentials: 'include'
     })
@@ -307,7 +307,7 @@ class SignUp extends React.Component {
   }
   signup(evt) {
     evt.target.blur();
-    fetch('http://localhost:3000/signup?', {
+    fetch('https://vps.scratchyone.com/todo/signup?', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify({
@@ -334,7 +334,7 @@ class SignUp extends React.Component {
       });
   }
   componentDidMount() {
-    fetch('http://localhost:3000/info', {
+    fetch('https://vps.scratchyone.com/todo/info', {
       method: 'get',
       credentials: 'include'
     })
@@ -415,7 +415,7 @@ class SignIn extends React.Component {
   }
   signin(evt) {
     evt.target.blur();
-    fetch('http://localhost:3000/signin?', {
+    fetch('https://vps.scratchyone.com/todo/signin?', {
       method: 'post',
       credentials: 'include',
       body: JSON.stringify({
@@ -442,7 +442,7 @@ class SignIn extends React.Component {
       });
   }
   componentDidMount() {
-    fetch('http://localhost:3000/info', {
+    fetch('https://vps.scratchyone.com/todo/info', {
       method: 'get',
       credentials: 'include'
     })

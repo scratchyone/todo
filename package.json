@@ -24,7 +24,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build && react-snapshot && mv build/200.html build/404.html",
+    "build": "react-scripts build && react-snapshot && cp build/200.html build/404.html",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
