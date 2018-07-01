@@ -9,7 +9,12 @@ const uuidv1 = require('uuid/v1');
 var bcrypt = require('bcrypt');
 app.use(bodyParser.json());
 app.use(cookieParser());
-var allowedOrigins = ['http://localhost:3000', 'http://localhost:8000'];
+var allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:8000',
+  'http://localhost:3001',
+  'https://www.scratchyone.com'
+];
 app.use(
   cors({
     credentials: true,
@@ -66,7 +71,7 @@ app.post('/signup', (req, res) => {
               username: req.body.username,
               hashword: hashword,
               id: hash,
-              bio: '',
+              todos: [],
               sessions: [uuid]
             },
             () => {}
@@ -89,7 +94,7 @@ app.get('/info', (req, res) => {
             authorized: true,
             sessionid: doc.sessionid,
             username: doc.username,
-            bio: doc.bio
+            todos: doc.todos
           }
         : { authorized: false }
     );
@@ -112,11 +117,11 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/setbio', (req, res) => {
+app.post('/settodos', (req, res) => {
   users.findOne({ sessions: req.cookies.sessionid }, (err, doc) => {
     users.update(
       { sessions: req.cookies.sessionid },
-      { $set: { bio: req.body.bio } },
+      { $set: { todos: req.body.todos } },
       {},
       (err, numReplaced => {})
     );
@@ -133,7 +138,7 @@ app.get('/user', (req, res) => {
   let found = false;
   users.findOne({ username: req.query.username }, (err, doc) => {
     if (doc != null) {
-      res.send({ success: true, username: doc.username, bio: doc.bio });
+      res.send({ success: true, username: doc.username, todos: doc.todos });
     } else {
       res.send({ success: false, error: 'User not found' });
     }

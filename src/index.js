@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
-
+import { render } from 'react-snapshot';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -12,22 +13,60 @@ class App extends React.Component {
       keycount: 0
     };
   }
+  updatetodos(todos) {
+    fetch('http://localhost:3000/settodos?', {
+      method: 'post',
+      credentials: 'include',
+      body: JSON.stringify({ todos: todos }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {})
+      .catch(function(err) {
+        // Error :(
+      });
+  }
+  componentDidMount() {
+    fetch('http://localhost:3000/info', {
+      method: 'get',
+      credentials: 'include'
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        if (doc.authorized) {
+          this.setState({ todos: doc.todos });
+        }
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
   crossout(i) {
     let newtodos = this.state.todos;
     newtodos[i].done = !newtodos[i].done;
     this.setState({ todos: newtodos });
+    this.updatetodos(newtodos);
   }
 
   remove(i) {
     let newtodos = this.state.todos;
     newtodos.splice(i, 1);
     this.setState({ todos: newtodos });
+    this.updatetodos(newtodos);
   }
 
   add(text) {
     let newtodos = this.state.todos;
     newtodos.push({ text: text, done: false, key: this.state.keycount });
     this.setState({ todos: newtodos, keycount: this.state.keycount + 1 });
+    this.updatetodos(newtodos);
   }
   render() {
     return (
@@ -61,6 +100,14 @@ class App extends React.Component {
                   return <SignUp />;
                 }}
               />
+              <Route
+                exact
+                path="/signin"
+                render={() => {
+                  return <SignIn />;
+                }}
+              />
+              <Route render={() => <Redirect to="/" />} />
             </Switch>
           </div>
         </div>
@@ -89,6 +136,7 @@ class Todos extends React.Component {
           }}
           item={this.props.items[i]}
           key={this.props.items[i].key}
+          first={this.props.keycount === 0}
         />
       );
     }
@@ -174,9 +222,48 @@ class ItemInput extends React.Component {
   }
 }
 class ToDoContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: ''
+    };
+  }
+  componentDidMount() {
+    fetch('http://localhost:3000/info', {
+      method: 'get',
+      credentials: 'include'
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        if (!doc.authorized) {
+          this.setState({ redirect: <Redirect to="/" /> });
+        }
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
+  signout() {
+    fetch('http://localhost:3000/signout?', {
+      method: 'post',
+      credentials: 'include'
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        this.setState({ redirect: <Redirect to="/" /> });
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
   render() {
     return (
       <div>
+        {this.state.redirect}
         <h1 className="header">To-Do</h1>
         <Todos
           crossout={i => {
@@ -193,20 +280,236 @@ class ToDoContainer extends React.Component {
             this.props.add(text);
           }}
         />
+        <div className="text-center mt-1">
+          <button
+            onClick={() => {
+              this.signout();
+            }}
+            className="sign"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     );
   }
 }
 class SignUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: '',
+      visible: 'hidden',
+      error: '',
+      username: '',
+      password: ''
+    };
+  }
+  signup(evt) {
+    evt.target.blur();
+    fetch('http://localhost:3000/signup?', {
+      method: 'post',
+      credentials: 'include',
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        if (doc.success) {
+          this.setState({ redirect: <Redirect to="/todo" /> });
+        } else {
+          this.setState({ error: doc.error });
+        }
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
+  componentDidMount() {
+    fetch('http://localhost:3000/info', {
+      method: 'get',
+      credentials: 'include'
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        if (doc.authorized) {
+          this.setState({ redirect: <Redirect to="/todo" /> });
+        } else {
+          this.setState({ visible: '' });
+        }
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
   render() {
     return (
-      <div>
-        <h1>Hi!</h1>
+      <div style={{ visibility: this.state.visible }}>
+        {this.state.redirect}
+        <Helmet>
+          <title>Sign Up</title>
+        </Helmet>
+        <h1 className="header mb-2">Sign Up</h1>
+        <input
+          onChange={evt => {
+            this.setState({
+              username: evt.target.value
+            });
+          }}
+          placeholder="Username"
+          className="easy-input"
+          type="text"
+          value={this.state.username}
+        />
+        <input
+          onChange={evt => {
+            this.setState({
+              password: evt.target.value
+            });
+          }}
+          placeholder="Password"
+          className="easy-input"
+          type="password"
+          value={this.state.password}
+        />
+        <button
+          className="sign"
+          onClick={evt => {
+            this.signup(evt);
+          }}
+        >
+          Sign Up
+        </button>
+        <div className="mt-1 text-red">{this.state.error}</div>
+        <div className="mt-1 text-grey-darkest">
+          Existing user?
+          <Link className="ml-1 text-blue-dark no-underline" to="/signin">
+            Sign In
+          </Link>
+        </div>
       </div>
     );
   }
 }
-ReactDOM.render(
+
+class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirect: '',
+      visible: 'hidden',
+      error: '',
+      username: '',
+      password: ''
+    };
+  }
+  signin(evt) {
+    evt.target.blur();
+    fetch('http://localhost:3000/signin?', {
+      method: 'post',
+      credentials: 'include',
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        if (doc.success) {
+          this.setState({ redirect: <Redirect to="/todo" /> });
+        } else {
+          this.setState({ error: doc.error });
+        }
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
+  componentDidMount() {
+    fetch('http://localhost:3000/info', {
+      method: 'get',
+      credentials: 'include'
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(doc => {
+        if (doc.authorized) {
+          this.setState({ redirect: <Redirect to="/todo" /> });
+        } else {
+          this.setState({ visible: '' });
+        }
+      })
+      .catch(function(err) {
+        // Error :(
+      });
+  }
+  render() {
+    return (
+      <div style={{ visiblility: this.state.visible }}>
+        {this.state.redirect}
+        <Helmet>
+          <title>Sign In</title>
+        </Helmet>
+        <h1 className="header mb-2">Sign In</h1>
+        <input
+          placeholder="Username"
+          value={this.state.username}
+          className="easy-input"
+          type="text"
+          onChange={evt => {
+            this.setState({
+              username: evt.target.value
+            });
+          }}
+        />
+        <input
+          placeholder="Password"
+          value={this.state.password}
+          className="easy-input"
+          type="password"
+          onChange={evt => {
+            this.setState({
+              password: evt.target.value
+            });
+          }}
+        />
+        <button
+          className="sign"
+          onClick={evt => {
+            this.signin(evt);
+          }}
+        >
+          Sign In
+        </button>
+        <div className="mt-1 text-red">{this.state.error}</div>
+        <div className="mt-1 text-grey-darkest">
+          Don't have an account?
+          <Link className="ml-1 text-blue-dark no-underline" to="/">
+            Sign Up
+          </Link>
+        </div>
+      </div>
+    );
+  }
+}
+render(
   <BrowserRouter>
     <App />
   </BrowserRouter>,

@@ -6267,6 +6267,41 @@ body {
   color: #606f7b;
 }
 
+.easy-input {
+  padding: .25rem;
+  padding-right: 0;
+  width: 100%;
+  margin-top: .25rem;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: .25rem;
+  display: flex;
+}
+
+.easy-input:focus {
+  border-color: #8795a1;
+}
+
+.sign {
+  margin-top: .25rem;
+  border-radius: .25rem;
+  border-color: #3490dc;
+  border-width: 2px;
+  padding: .25rem;
+  color: #3490dc;
+  font-weight: 600;
+}
+
+.sign:hover {
+  color: #fff;
+  background-color: #3490dc;
+}
+
+.sign:focus {
+  color: #fff;
+  background-color: #3490dc;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;

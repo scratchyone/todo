@@ -59,3 +59,23 @@ body {
 .no-tasks {
   @apply .text-grey-darker;
 }
+
+.easy-input {
+  @apply .p-1 .pr-0 .w-full .mt-1 .border-solid .border-2 .rounded flex;
+}
+
+.easy-input:focus {
+  @apply .border-grey-dark;
+}
+
+.sign {
+  @apply .mt-1 .rounded .border-blue .border-2 .p-1 .text-blue .font-semibold;
+}
+
+.sign:hover {
+  @apply .text-white .bg-blue;
+}
+
+.sign:focus {
+  @apply .text-white .bg-blue;
+}

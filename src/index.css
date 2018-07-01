@@ -1,48 +1,62 @@
 .animate-color {
-    transition-property: color;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 .remove-button {
-    transition-property: color;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 .add-button {
-    transition-property: color;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
-    outline: none !important;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  outline: none !important;
 }
 
 .remove-button {
-    outline: none !important;
+  outline: none !important;
 }
 
 .list-item {
-    transition-property: color, text-decoration-color;
-    transition-duration: 0.2s;
-    transition-timing-function: ease;
-    text-decoration: line-through;
+  transition-property: color, text-decoration-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+  text-decoration: line-through;
 }
 
 .header {
-    font-family: sans-serif;
-    font-weight: normal;
+  font-family: sans-serif;
+  font-weight: normal;
 }
 
 .add-input {
-    outline: none;
+  outline: none;
 }
 
 .item-input {
-    transition-property: border;
-    transition-duration: 0.2s;
-    transition-timing-function: ease;
+  transition-property: border;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 button {
-    outline: none !important;
+  outline: none !important;
+}
+
+.easy-input {
+  outline: none;
+  transition-property: border;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.sign {
+  outline: none;
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
