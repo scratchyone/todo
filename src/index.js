@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
 import { render } from 'react-snapshot';
-let prefix = '/todo/';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -108,7 +107,7 @@ class App extends React.Component {
                   return <SignIn />;
                 }}
               />
-              <Route render={() => <Redirect to={prefix + '/'} />} />
+              <Route render={() => <Redirect to="/" />} />
             </Switch>
           </div>
         </div>
@@ -239,7 +238,7 @@ class ToDoContainer extends React.Component {
       })
       .then(doc => {
         if (!doc.authorized) {
-          this.setState({ redirect: <Redirect to={prefix + '/'} /> });
+          this.setState({ redirect: <Redirect to="/" /> });
         }
       })
       .catch(function(err) {
@@ -255,7 +254,7 @@ class ToDoContainer extends React.Component {
         return response.json();
       })
       .then(doc => {
-        this.setState({ redirect: <Redirect to={prefix + '/'} /> });
+        this.setState({ redirect: <Redirect to="/" /> });
       })
       .catch(function(err) {
         // Error :(
@@ -325,7 +324,7 @@ class SignUp extends React.Component {
       })
       .then(doc => {
         if (doc.success) {
-          this.setState({ redirect: <Redirect to={prefix + '/todo'} /> });
+          this.setState({ redirect: <Redirect to="/todo" /> });
         } else {
           this.setState({ error: doc.error });
         }
@@ -344,7 +343,7 @@ class SignUp extends React.Component {
       })
       .then(doc => {
         if (doc.authorized) {
-          this.setState({ redirect: <Redirect to={prefix + '/todo'} /> });
+          this.setState({ redirect: <Redirect to="/todo" /> });
         } else {
           this.setState({ visible: '' });
         }
@@ -433,7 +432,7 @@ class SignIn extends React.Component {
       })
       .then(doc => {
         if (doc.success) {
-          this.setState({ redirect: <Redirect to={prefix + '/todo'} /> });
+          this.setState({ redirect: <Redirect to="/todo" /> });
         } else {
           this.setState({ error: doc.error });
         }
@@ -452,7 +451,7 @@ class SignIn extends React.Component {
       })
       .then(doc => {
         if (doc.authorized) {
-          this.setState({ redirect: <Redirect to={prefix + '/todo'} /> });
+          this.setState({ redirect: <Redirect to="/todo" /> });
         } else {
           this.setState({ visible: '' });
         }
@@ -511,7 +510,7 @@ class SignIn extends React.Component {
   }
 }
 render(
-  <BrowserRouter>
+  <BrowserRouter basename="/todo">
     <App />
   </BrowserRouter>,
   document.getElementById('root')
