@@ -286,7 +286,7 @@ class ToDoContainer extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>Sign Up</title>
+          <title>My Todos</title>
         </Helmet>
         {this.state.redirect}
         <h1 className="header">To-Do</h1>
