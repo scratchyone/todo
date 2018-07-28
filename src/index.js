@@ -59,16 +59,16 @@ class App extends React.Component {
   }
   componentDidMount() {
     this.fetchTodos();
-    let fetchtodos = window.setInterval(() => {
+    let fetchTodos = window.setInterval(() => {
       this.fetchTodos();
     }, 1000);
-    this.setState({ fetchtodos: fetchtodos });
+    this.setState({ fetchTodos: fetchTodos });
   }
   componentWillUnmount() {
     clearInterval(this.state.fetchTodos);
   }
 
-  crossout(i) {
+  strikethrough(i) {
     let newtodos = this.state.todos;
     newtodos[i].done = !newtodos[i].done;
     this.setState({ todos: newtodos });
@@ -107,8 +107,8 @@ class App extends React.Component {
                     remove={i => {
                       this.remove(i);
                     }}
-                    crossout={i => {
-                      this.crossout(i);
+                    strikethrough={i => {
+                      this.strikethrough(i);
                     }}
                   />
                 )}
@@ -149,8 +149,8 @@ class Todos extends React.Component {
       if (!this.props.items[i].hidden) {
         todos.push(
           <Todo
-            crossout={() => {
-              this.props.crossout(i);
+            strikethrough={() => {
+              this.props.strikethrough(i);
             }}
             remove={() => {
               this.props.remove(i);
@@ -187,7 +187,7 @@ class Todo extends React.Component {
         />
         <button
           onClick={() => {
-            this.props.crossout();
+            this.props.strikethrough();
           }}
           className={'list-item '}
           style={{
@@ -291,8 +291,8 @@ class ToDoContainer extends React.Component {
         {this.state.redirect}
         <h1 className="header">To-Do</h1>
         <Todos
-          crossout={i => {
-            this.props.crossout(i);
+          strikethrough={i => {
+            this.props.strikethrough(i);
           }}
           remove={i => {
             this.props.remove(i);
