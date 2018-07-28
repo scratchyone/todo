@@ -5,6 +5,7 @@
 /auth/users.db
 # testing
 /coverage
+/build
 
 # misc
 .DS_Store

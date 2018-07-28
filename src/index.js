@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import './output.css';
@@ -18,10 +17,10 @@ class App extends React.Component {
     this.state = {
       todos: [],
       first: true,
-      fetchtodos: null
+      fetchTodos: null
     };
   }
-  updatetodos(todos) {
+  updateTodos(todos) {
     fetch(api + '/settodos?', {
       method: 'post',
       credentials: 'include',
@@ -39,7 +38,7 @@ class App extends React.Component {
         // Error :(
       });
   }
-  fetchtodos() {
+  fetchTodos() {
     fetch(api + '/info', {
       method: 'get',
       credentials: 'include'
@@ -59,34 +58,35 @@ class App extends React.Component {
       });
   }
   componentDidMount() {
-    this.fetchtodos();
+    this.fetchTodos();
     let fetchtodos = window.setInterval(() => {
-      this.fetchtodos();
+      this.fetchTodos();
     }, 1000);
     this.setState({ fetchtodos: fetchtodos });
   }
   componentWillUnmount() {
-    clearInterval(this.state.fetchtodos);
+    clearInterval(this.state.fetchTodos);
   }
+
   crossout(i) {
     let newtodos = this.state.todos;
     newtodos[i].done = !newtodos[i].done;
     this.setState({ todos: newtodos });
-    this.updatetodos(newtodos);
+    this.updateTodos(newtodos);
   }
 
   remove(i) {
     let newtodos = this.state.todos;
     newtodos[i].hidden = true;
     this.setState({ todos: newtodos });
-    this.updatetodos(newtodos);
+    this.updateTodos(newtodos);
   }
 
   add(text) {
     let newtodos = this.state.todos;
     newtodos.push({ text: text, done: false, key: uuidv1() });
     this.setState({ todos: newtodos, first: false });
-    this.updatetodos(newtodos);
+    this.updateTodos(newtodos);
   }
   render() {
     return (
