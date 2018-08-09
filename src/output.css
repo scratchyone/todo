@@ -6185,14 +6185,13 @@ table {
 }
 
 body {
-  height: 100vh;
   background-color: #f1f5f8;
 }
 
 .holder {
   margin-left: auto;
   margin-right: auto;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

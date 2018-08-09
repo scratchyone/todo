@@ -90,45 +90,48 @@ class App extends React.Component {
   }
   render() {
     return (
-      <div className="holder">
-        <div>
-          <div className="box">
-            <Switch>
-              <Route
-                exact
-                path="/todo"
-                render={() => (
-                  <ToDoContainer
-                    first={this.state.first}
-                    todos={this.state.todos}
-                    add={text => {
-                      this.add(text);
-                    }}
-                    remove={i => {
-                      this.remove(i);
-                    }}
-                    strikethrough={i => {
-                      this.strikethrough(i);
-                    }}
-                  />
-                )}
-              />
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  return <SignUp />;
-                }}
-              />
-              <Route
-                exact
-                path="/signin"
-                render={() => {
-                  return <SignIn />;
-                }}
-              />
-              <Route render={() => <Redirect to="/" />} />
-            </Switch>
+      <div className="h-screen max-h-screen overflow-hidden">
+        <div className="w-full h-10 bg-black" />
+        <div className="holder max-h-full">
+          <div>
+            <div className="box">
+              <Switch>
+                <Route
+                  exact
+                  path="/todo"
+                  render={() => (
+                    <ToDoContainer
+                      first={this.state.first}
+                      todos={this.state.todos}
+                      add={text => {
+                        this.add(text);
+                      }}
+                      remove={i => {
+                        this.remove(i);
+                      }}
+                      strikethrough={i => {
+                        this.strikethrough(i);
+                      }}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    return <SignUp />;
+                  }}
+                />
+                <Route
+                  exact
+                  path="/signin"
+                  render={() => {
+                    return <SignIn />;
+                  }}
+                />
+                <Route render={() => <Redirect to="/" />} />
+              </Switch>
+            </div>
           </div>
         </div>
       </div>
@@ -197,6 +200,7 @@ class Todo extends React.Component {
         >
           {this.props.item.text}
         </button>
+        <i className="float-right text-sm ml-2 fas fa-ellipsis-v" />
       </div>
     );
   }
