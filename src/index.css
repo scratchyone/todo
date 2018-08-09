@@ -22,7 +22,8 @@
 }
 
 .list-item {
-  transition-property: color, text-decoration-color;
+  transition-property: color, text-decoration-color,
+    -webkit-text-decoration-color;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   text-decoration: line-through;
@@ -64,4 +65,13 @@ button {
 .todos {
   max-height: 65vh;
   overflow-y: auto;
+  overflow-x: auto;
+}
+
+.box-holder {
+  max-width: 80vw;
+}
+
+.todo {
+  white-space: nowrap;
 }

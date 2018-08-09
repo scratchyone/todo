@@ -91,7 +91,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="holder">
-        <div>
+        <div className="box-holder">
           <div className="box">
             <Switch>
               <Route
@@ -192,7 +192,10 @@ class Todo extends React.Component {
           className={'list-item '}
           style={{
             color: this.props.item.done ? '#606f7b' : '',
-            textDecorationColor: this.props.item.done ? 'black' : 'transparent'
+            textDecorationColor: this.props.item.done ? 'black' : 'transparent',
+            WebkitTextDecorationColor: this.props.item.done
+              ? '#000000'
+              : 'transparent'
           }}
         >
           {this.props.item.text}
