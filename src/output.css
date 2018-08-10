@@ -6220,7 +6220,7 @@ body {
   color: #22292f;
 }
 
-.list-item:hover {
+.no-touchevents .list-item:hover {
   color: #606f7b;
 }
 
@@ -6228,7 +6228,7 @@ body {
   margin-right: .25rem;
 }
 
-.remove-button:hover {
+.no-touchevents .remove-button:hover:hover {
   color: #e3342f;
 }
 
@@ -6259,7 +6259,7 @@ body {
   margin-left: .25rem;
 }
 
-.add-button:hover {
+.no-touchevents .add-button:hover {
   color: #38c172;
 }
 
@@ -6292,7 +6292,7 @@ body {
   font-weight: 600;
 }
 
-.sign:hover {
+.no-touchevents .sign:hover {
   color: #fff;
   background-color: #3490dc;
 }

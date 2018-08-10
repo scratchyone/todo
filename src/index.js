@@ -176,6 +176,19 @@ class Todos extends React.Component {
 }
 
 class Todo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isMounted: false,
+      forceTouchHover: false
+    };
+  }
+  componentDidMount() {
+    this.setState({ isMounted: true });
+  }
+  componentWillUnmount() {
+    this.setState({ isMounted: false });
+  }
   render() {
     return (
       <div className="todo">
@@ -189,7 +202,18 @@ class Todo extends React.Component {
           onClick={() => {
             this.props.strikethrough();
           }}
-          className={'list-item '}
+          className={
+            'list-item ' + (this.state.forceHover ? 'forceTouchHover' : '')
+          }
+          onMouseOver={() => {
+            this.setState({ forceTouchHover: true });
+          }}
+          onMouseOut={() => {
+            window.setTimeout(() => {
+              if (this.state.isMounted)
+                this.setState({ forceTouchHover: false });
+            }, 1000);
+          }}
           style={{
             color: this.props.item.done ? '#606f7b' : '',
             textDecorationColor: this.props.item.done ? 'black' : 'transparent',
