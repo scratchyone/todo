@@ -27,5 +27,6 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "tailwind": "tailwind build src/styles.css -o src/output.css"
-  }
+  },
+  "devDependencies": {}
 }
