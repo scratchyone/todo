@@ -5,6 +5,7 @@ import './output.css';
 import './index.css';
 import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
+import registerServiceWorker from './registerServiceWorker';
 let api = 'https://vps.scratchyone.com/todo';
 if (
   window.location.hostname === 'localhost' ||
@@ -563,3 +564,4 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root')
 );
+registerServiceWorker();
