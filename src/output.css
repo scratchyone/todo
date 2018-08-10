@@ -6228,7 +6228,7 @@ body {
   margin-right: .25rem;
 }
 
-.no-touchevents .remove-button:hover:hover {
+.no-touchevents .remove-button:hover {
   color: #e3342f;
 }
 
@@ -6259,7 +6259,8 @@ body {
   margin-left: .25rem;
 }
 
-.no-touchevents .add-button:hover {
+.no-touchevents .add-button:hover,
+.touchevents .forceTouchHover {
   color: #38c172;
 }
 

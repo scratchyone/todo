@@ -176,24 +176,11 @@ class Todos extends React.Component {
 }
 
 class Todo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isMounted: false,
-      forceTouchHover: false
-    };
-  }
-  componentDidMount() {
-    this.setState({ isMounted: true });
-  }
-  componentWillUnmount() {
-    this.setState({ isMounted: false });
-  }
   render() {
     return (
       <div className="todo">
         <button
-          className="remove-button fas fa-times"
+          className={'remove-button fas fa-times '}
           onClick={() => {
             this.props.remove();
           }}
@@ -202,18 +189,7 @@ class Todo extends React.Component {
           onClick={() => {
             this.props.strikethrough();
           }}
-          className={
-            'list-item ' + (this.state.forceHover ? 'forceTouchHover' : '')
-          }
-          onMouseOver={() => {
-            this.setState({ forceTouchHover: true });
-          }}
-          onMouseOut={() => {
-            window.setTimeout(() => {
-              if (this.state.isMounted)
-                this.setState({ forceTouchHover: false });
-            }, 1000);
-          }}
+          className={'list-item '}
           style={{
             color: this.props.item.done ? '#606f7b' : '',
             textDecorationColor: this.props.item.done ? 'black' : 'transparent',
@@ -233,8 +209,16 @@ class ItemInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addvalue: ''
+      addvalue: '',
+      isMounted: false,
+      forceAddHover: false
     };
+  }
+  componentDidMount() {
+    this.setState({ isMounted: true });
+  }
+  componentWillUnmount() {
+    this.setState({ isMounted: false });
   }
   add() {
     if (this.state.addvalue !== '') {
@@ -244,7 +228,7 @@ class ItemInput extends React.Component {
   }
   render() {
     return (
-      <div className="item-input">
+      <div className={'item-input'}>
         <input
           value={this.state.addvalue}
           onChange={event => {
@@ -262,7 +246,19 @@ class ItemInput extends React.Component {
           onClick={() => {
             this.add();
           }}
-          className="add-button"
+          className={
+            'add-button ' + (this.state.forceAddHover ? 'forceTouchHover' : '')
+          }
+          onMouseDown={() => {
+            //alert('mouseup');
+            this.setState({ forceAddHover: true });
+          }}
+          onMouseUp={() => {
+            //this.setState({ forceAddHover: false });
+            window.setTimeout(() => {
+              if (this.state.isMounted) this.setState({ forceAddHover: false });
+            }, 200);
+          }}
         >
           <i className="fas fa-plus" />
         </button>
