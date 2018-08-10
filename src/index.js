@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
 import uuidv1 from './uuid.js';
-import { render } from 'react-snapshot';
+import ReactDOM from 'react-dom';
 let api = 'https://vps.scratchyone.com/todo';
 if (
   window.location.hostname === 'localhost' ||
@@ -557,7 +557,7 @@ class SignIn extends React.Component {
     );
   }
 }
-render(
+ReactDOM.render(
   <BrowserRouter basename="/todo">
     <App />
   </BrowserRouter>,
