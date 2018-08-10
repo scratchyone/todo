@@ -5,6 +5,7 @@ import './output.css';
 import './index.css';
 import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
+import { Offline, Online } from 'react-detect-offline';
 import registerServiceWorker from './registerServiceWorker';
 let api = 'https://vps.scratchyone.com/todo';
 if (
@@ -94,42 +95,48 @@ class App extends React.Component {
       <div className="holder">
         <div className="box-holder">
           <div className="box">
-            <Switch>
-              <Route
-                exact
-                path="/todo"
-                render={() => (
-                  <ToDoContainer
-                    first={this.state.first}
-                    todos={this.state.todos}
-                    add={text => {
-                      this.add(text);
-                    }}
-                    remove={i => {
-                      this.remove(i);
-                    }}
-                    strikethrough={i => {
-                      this.strikethrough(i);
-                    }}
-                  />
-                )}
-              />
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  return <SignUp />;
-                }}
-              />
-              <Route
-                exact
-                path="/signin"
-                render={() => {
-                  return <SignIn />;
-                }}
-              />
-              <Route render={() => <Redirect to="/" />} />
-            </Switch>
+            <Online>
+              <Switch>
+                <Route
+                  exact
+                  path="/todo"
+                  render={() => (
+                    <ToDoContainer
+                      first={this.state.first}
+                      todos={this.state.todos}
+                      add={text => {
+                        this.add(text);
+                      }}
+                      remove={i => {
+                        this.remove(i);
+                      }}
+                      strikethrough={i => {
+                        this.strikethrough(i);
+                      }}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    return <SignUp />;
+                  }}
+                />
+                <Route
+                  exact
+                  path="/signin"
+                  render={() => {
+                    return <SignIn />;
+                  }}
+                />
+                <Route render={() => <Redirect to="/" />} />
+              </Switch>
+            </Online>
+            <Offline>
+              You are currently offline. To prevent loss of data, this app only
+              works online.
+            </Offline>
           </div>
         </div>
       </div>
