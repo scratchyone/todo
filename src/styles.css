@@ -20,7 +20,7 @@ body {
     @apply .no-underline .text-black;
 }
 
-.list-item:hover {
+.no-touchevents .list-item:hover {
     @apply .text-grey-darker;
 }
 
@@ -28,7 +28,7 @@ body {
     @apply mr-1;
 }
 
-.remove-button:hover {
+.no-touchevents .remove-button:hover {
     @apply text-red;
 }
 
@@ -52,7 +52,8 @@ body {
     @apply .m-2 .ml-1;
 }
 
-.add-button:hover {
+.no-touchevents .add-button:hover,
+.touchevents .forceTouchHover {
     @apply .text-green;
 }
 
@@ -72,7 +73,7 @@ body {
     @apply .mt-1 .rounded .border-blue .border-2 .p-1 .text-blue .font-semibold;
 }
 
-.sign:hover {
+.no-touchevents .sign:hover {
     @apply .text-white .bg-blue;
 }
 

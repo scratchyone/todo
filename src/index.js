@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
 import uuidv1 from './uuid.js';
-import { render } from 'react-snapshot';
+import ReactDOM from 'react-dom';
+import { Offline, Online } from 'react-detect-offline';
+import registerServiceWorker from './registerServiceWorker';
 let api = 'https://vps.scratchyone.com/todo';
 if (
   window.location.hostname === 'localhost' ||
@@ -93,44 +95,50 @@ class App extends React.Component {
       <div className="h-screen max-h-screen overflow-hidden">
         <div className="w-full h-10 bg-black" />
         <div className="holder max-h-full">
-          <div>
+          <div className="box-holder">
             <div className="box">
-              <Switch>
-                <Route
-                  exact
-                  path="/todo"
-                  render={() => (
-                    <ToDoContainer
-                      first={this.state.first}
-                      todos={this.state.todos}
-                      add={text => {
-                        this.add(text);
-                      }}
-                      remove={i => {
-                        this.remove(i);
-                      }}
-                      strikethrough={i => {
-                        this.strikethrough(i);
-                      }}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/"
-                  render={() => {
-                    return <SignUp />;
-                  }}
-                />
-                <Route
-                  exact
-                  path="/signin"
-                  render={() => {
-                    return <SignIn />;
-                  }}
-                />
-                <Route render={() => <Redirect to="/" />} />
-              </Switch>
+              <Online>
+                <Switch>
+                  <Route
+                    exact
+                    path="/todo"
+                    render={() => (
+                      <ToDoContainer
+                        first={this.state.first}
+                        todos={this.state.todos}
+                        add={text => {
+                          this.add(text);
+                        }}
+                        remove={i => {
+                          this.remove(i);
+                        }}
+                        strikethrough={i => {
+                          this.strikethrough(i);
+                        }}
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/"
+                    render={() => {
+                      return <SignUp />;
+                    }}
+                  />
+                  <Route
+                    exact
+                    path="/signin"
+                    render={() => {
+                      return <SignIn />;
+                    }}
+                  />
+                  <Route render={() => <Redirect to="/" />} />
+                </Switch>
+              </Online>
+              <Offline>
+                You are currently offline. To prevent loss of data, this app
+                only works online.
+              </Offline>
             </div>
           </div>
         </div>
@@ -183,7 +191,7 @@ class Todo extends React.Component {
     return (
       <div className="todo">
         <button
-          className="remove-button fas fa-times"
+          className={'remove-button fas fa-times '}
           onClick={() => {
             this.props.remove();
           }}
@@ -195,7 +203,10 @@ class Todo extends React.Component {
           className={'list-item '}
           style={{
             color: this.props.item.done ? '#606f7b' : '',
-            textDecorationColor: this.props.item.done ? 'black' : 'transparent'
+            textDecorationColor: this.props.item.done ? 'black' : 'transparent',
+            WebkitTextDecorationColor: this.props.item.done
+              ? '#000000'
+              : 'transparent'
           }}
         >
           {this.props.item.text}
@@ -210,8 +221,16 @@ class ItemInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      addvalue: ''
+      addvalue: '',
+      isMounted: false,
+      forceAddHover: false
     };
+  }
+  componentDidMount() {
+    this.setState({ isMounted: true });
+  }
+  componentWillUnmount() {
+    this.setState({ isMounted: false });
   }
   add() {
     if (this.state.addvalue !== '') {
@@ -221,7 +240,7 @@ class ItemInput extends React.Component {
   }
   render() {
     return (
-      <div className="item-input">
+      <div className={'item-input'}>
         <input
           value={this.state.addvalue}
           onChange={event => {
@@ -239,7 +258,19 @@ class ItemInput extends React.Component {
           onClick={() => {
             this.add();
           }}
-          className="add-button"
+          className={
+            'add-button ' + (this.state.forceAddHover ? 'forceTouchHover' : '')
+          }
+          onMouseDown={() => {
+            //alert('mouseup');
+            this.setState({ forceAddHover: true });
+          }}
+          onMouseUp={() => {
+            //this.setState({ forceAddHover: false });
+            window.setTimeout(() => {
+              if (this.state.isMounted) this.setState({ forceAddHover: false });
+            }, 200);
+          }}
         >
           <i className="fas fa-plus" />
         </button>
@@ -538,9 +569,10 @@ class SignIn extends React.Component {
     );
   }
 }
-render(
+ReactDOM.render(
   <BrowserRouter basename="/todo">
     <App />
   </BrowserRouter>,
   document.getElementById('root')
 );
+registerServiceWorker();
