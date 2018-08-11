@@ -41,7 +41,9 @@ app.post('/signin', (req, res) => {
       bcrypt.compare(req.body.password, doc.hashword, function(err, result) {
         if (result) {
           let uuid = uuidv1();
-          res.cookie('sessionid', uuid, {});
+          res.cookie('sessionid', uuid, {
+            expires: new Date(new Date(j).setMonth(new Date().getMonth() + 1))
+          });
           users.update(
             { username: req.body.username },
             { $push: { sessions: uuid } },
@@ -76,7 +78,9 @@ app.post('/signup', (req, res) => {
             },
             () => {}
           );
-          res.cookie('sessionid', uuid, {});
+          res.cookie('sessionid', uuid, {
+            expires: new Date(new Date(j).setMonth(new Date().getMonth() + 1))
+          });
           res.send({ success: true, sessionid: uuid });
         });
       });
