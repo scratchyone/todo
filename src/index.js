@@ -93,7 +93,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="h-screen max-h-screen overflow-hidden">
-        <div className="w-full h-10 bg-black" />
+        <div className="absolute w-full h-10 bg-black" />
         <div className="holder max-h-full">
           <div className="box-holder">
             <div className="box">

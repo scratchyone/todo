@@ -1,82 +1,82 @@
 @tailwind preflight;
 @tailwind utilities;
 body {
-    @apply .bg-grey-lighter;
+    @apply bg-grey-lighter;
 }
 
-.holder {
-    @apply .mx-auto .h-full .flex .justify-center .items-center;
+holder {
+    @apply mx-auto h-full flex justify-center items-center;
 }
 
-.box {
-    @apply .bg-white .shadow-md .rounded .px-8 .pt-6 .pb-8 .mb-4;
+box {
+    @apply bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4;
 }
 
-.header {
-    @apply .text-5xl .text-grey-darkest .text-center;
+header {
+    @apply text-5xl text-grey-darkest text-center;
 }
 
-.list-item {
-    @apply .no-underline .text-black;
+list-item {
+    @apply no-underline text-black;
 }
 
-.no-touchevents .list-item:hover {
-    @apply .text-grey-darker;
+no-touchevents list-item:hover {
+    @apply text-grey-darker;
 }
 
-.remove-button {
+remove-button {
     @apply mr-1;
 }
 
-.no-touchevents .remove-button:hover {
+no-touchevents remove-button:hover {
     @apply text-red;
 }
 
-.todos {
-    @apply .text-lg;
+todos {
+    @apply text-lg;
 }
 
-.item-input {
-    @apply .mt-2 .border-solid .border-2 .rounded flex;
+item-input {
+    @apply mt-2 border-solid border-2 rounded flex;
 }
 
-.item-input:focus-within {
-    @apply .border-grey-dark;
+item-input:focus-within {
+    @apply border-grey-dark;
 }
 
-.add-input {
-    @apply .p-1 .pr-0 .w-full;
+add-input {
+    @apply p-1 pr-0 w-full;
 }
 
-.add-button {
-    @apply .m-2 .ml-1;
+add-button {
+    @apply m-2 ml-1;
 }
 
-.no-touchevents .add-button:hover,
-.touchevents .forceTouchHover {
-    @apply .text-green;
+no-touchevents add-button:hover,
+touchevents forceTouchHover {
+    @apply text-green;
 }
 
-.no-tasks {
-    @apply .text-grey-darker;
+no-tasks {
+    @apply text-grey-darker;
 }
 
-.easy-input {
-    @apply .p-1 .pr-0 .w-full .mt-1 .border-solid .border-2 .rounded flex;
+easy-input {
+    @apply p-1 pr-0 w-full mt-1 border-solid border-2 rounded flex;
 }
 
-.easy-input:focus {
-    @apply .border-grey-dark;
+easy-input:focus {
+    @apply border-grey-dark;
 }
 
-.sign {
-    @apply .mt-1 .rounded .border-blue .border-2 .p-1 .text-blue .font-semibold;
+sign {
+    @apply mt-1 rounded border-blue border-2 p-1 text-blue font-semibold;
 }
 
-.no-touchevents .sign:hover {
-    @apply .text-white .bg-blue;
+no-touchevents sign:hover {
+    @apply text-white bg-blue;
 }
 
-.sign:focus {
-    @apply .text-white .bg-blue;
+sign:focus {
+    @apply text-white bg-blue;
 }
