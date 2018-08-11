@@ -42,7 +42,7 @@ app.post('/signin', (req, res) => {
         if (result) {
           let uuid = uuidv1();
           res.cookie('sessionid', uuid, {
-            expires: new Date(new Date(j).setMonth(new Date().getMonth() + 1))
+            expires: new Date(new Date().setMonth(new Date().getMonth() + 1))
           });
           users.update(
             { username: req.body.username },
@@ -79,7 +79,7 @@ app.post('/signup', (req, res) => {
             () => {}
           );
           res.cookie('sessionid', uuid, {
-            expires: new Date(new Date(j).setMonth(new Date().getMonth() + 1))
+            expires: new Date(new Date().setMonth(new Date().getMonth() + 1))
           });
           res.send({ success: true, sessionid: uuid });
         });
