@@ -51,6 +51,7 @@ app.post('/signin', (req, res) => {
             (err, numReplaced) => {}
           );
           res.send({ success: true, sessionid: uuid });
+          console.log(req.body.username + ' signed in.');
         } else {
           res.send({ success: false, error: 'Username/password incorrect' });
         }
@@ -82,6 +83,7 @@ app.post('/signup', (req, res) => {
             expires: new Date(new Date().setMonth(new Date().getMonth() + 1))
           });
           res.send({ success: true, sessionid: uuid });
+          console.log(req.body.username + ' made an account.');
         });
       });
     }
@@ -102,8 +104,7 @@ app.get('/info', (req, res) => {
           }
         : { authorized: false }
     );
-    console.log(err);
-    console.log(doc == null);
+    if (err) console.log(err);
   });
 });
 
@@ -116,8 +117,7 @@ app.get('/', (req, res) => {
         ? { authorized: true, sessionid: doc.sessionid }
         : { authorized: false }
     );
-    console.log(err);
-    console.log(doc == null);
+    if (err) console.log(err);
   });
 });
 
@@ -134,6 +134,7 @@ app.post('/settodos', (req, res) => {
         ? { success: true }
         : { success: false, error: 'Incorrect session id' }
     );
+    console.log(doc.username + ' updated their todos.');
   });
 });
 
@@ -158,4 +159,5 @@ app.post('/signout', (req, res) => {
   );
   res.cookie('sessionid', '');
   res.send({ success: true });
+  console.log('A user signed out.');
 });
