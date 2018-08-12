@@ -93,7 +93,23 @@ class App extends React.Component {
   render() {
     return (
       <div className="h-screen max-h-screen overflow-hidden">
-        <div className="absolute w-full h-10 bg-black" />
+        <div
+          style={{ lineHeight: '2.5rem' }}
+          className="absolute w-full h-10 bg-black"
+        >
+          <Link
+            to="/todo"
+            className="h-10 no-underline animate-color m-2 text-lg hover:text-grey-light text-white"
+          >
+            To-Do
+          </Link>
+          <Link
+            to="/todo"
+            className="no-underline animate-color m-2 text-sm hover:text-grey-light text-white"
+          >
+            Sign Out
+          </Link>
+        </div>
         <div className="holder max-h-full">
           <div className="box-holder">
             <div className="box">
