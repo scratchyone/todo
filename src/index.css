@@ -1,5 +1,6 @@
 body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden;
 }
 
 .animate-color {
@@ -78,4 +79,67 @@ button {
 
 .todo {
   white-space: nowrap;
+}
+
+.menu-button {
+  top: 10px;
+  left: 10px;
+}
+
+.menu-holder {
+  top: 0px;
+  left: 0px;
+  text-align: center;
+}
+
+.menu-holder {
+  width: 230px;
+  transition-property: transform;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+}
+
+.menu-holder.open {
+  transform: translate(0px, 0px);
+}
+
+.menu-holder.closed {
+  transform: translate(-230px, 0px);
+}
+
+#darken {
+  transition-property: background-color;
+  transition-duration: 0.4s;
+  transition-timing-function: ease;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: transparent;
+}
+
+#darken.closed {
+  pointer-events: none;
+}
+
+#darken.open {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (max-width: 770px) {
+  #darken.open {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+#menu-header {
+  margin-top: 10px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: normal;
+}
+
+.menu-item {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: normal;
 }

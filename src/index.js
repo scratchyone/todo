@@ -19,7 +19,8 @@ class App extends React.Component {
     this.state = {
       todos: [],
       first: true,
-      fetchTodos: null
+      fetchTodos: null,
+      menuOpen: false
     };
   }
   updateTodos(todos) {
@@ -93,9 +94,40 @@ class App extends React.Component {
     this.setState({ todos: newtodos, first: false });
     this.updateTodos(newtodos);
   }
+  toggleMenu() {
+    this.setState({ menuOpen: !this.state.menuOpen });
+  }
   render() {
     return (
       <div className="holder">
+        <div
+          onClick={() => {
+            this.toggleMenu();
+          }}
+          className={this.state.menuOpen ? 'open' : 'closed'}
+          id="darken"
+        />
+        <div
+          className={
+            'menu-holder h-screen bg-grey-lightest absolute ' +
+            (this.state.menuOpen ? 'open' : 'closed')
+          }
+        >
+          <h2 id="menu-header">To-Do</h2>
+          <h3>
+            <button className="menu-item hover:text-grey-darkest animate-color">
+              Sign Out
+            </button>
+          </h3>
+        </div>
+        <button
+          onClick={() => {
+            this.toggleMenu();
+          }}
+          className="menu-button absolute"
+        >
+          <i className="fas fa-bars hover:text-grey-darker animate-color" />
+        </button>
         <div className="box-holder">
           <div className="box">
             <Online>
