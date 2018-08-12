@@ -36,7 +36,7 @@ app.listen(3000, function() {
   console.log('listening on 3000');
 });
 app.post('/signin', (req, res) => {
-  users.findOne({ username: req.body.username }, (err, doc) => {
+  users.findOne({ username: req.body.username.toLowerCase() }, (err, doc) => {
     if (doc) {
       bcrypt.compare(req.body.password, doc.hashword, function(err, result) {
         if (result) {
@@ -45,13 +45,13 @@ app.post('/signin', (req, res) => {
             expires: new Date(new Date().setMonth(new Date().getMonth() + 1))
           });
           users.update(
-            { username: req.body.username },
+            { username: req.body.username.toLowerCase() },
             { $push: { sessions: uuid } },
             {},
             (err, numReplaced) => {}
           );
           res.send({ success: true, sessionid: uuid });
-          console.log(req.body.username + ' signed in.');
+          console.log(req.body.username.toLowerCase() + ' signed in.');
         } else {
           res.send({ success: false, error: 'Username/password incorrect' });
         }
@@ -62,16 +62,19 @@ app.post('/signin', (req, res) => {
   });
 });
 app.post('/signup', (req, res) => {
-  users.findOne({ username: req.body.username }, (err, doc) => {
+  users.findOne({ username: req.body.username.toLowerCase() }, (err, doc) => {
     if (doc) {
       res.send({ success: false, error: 'Account already exists' });
     } else {
       bcrypt.hash(req.body.password, 10, function(err, hashword) {
-        bcrypt.hash(hashword + req.body.username, 10, function(err, hash) {
+        bcrypt.hash(hashword + req.body.username.toLowerCase(), 10, function(
+          err,
+          hash
+        ) {
           let uuid = uuidv1();
           users.insert(
             {
-              username: req.body.username,
+              username: req.body.username.toLowerCase(),
               hashword: hashword,
               id: hash,
               todos: [],
@@ -83,7 +86,7 @@ app.post('/signup', (req, res) => {
             expires: new Date(new Date().setMonth(new Date().getMonth() + 1))
           });
           res.send({ success: true, sessionid: uuid });
-          console.log(req.body.username + ' made an account.');
+          console.log(req.body.username.toLowerCase() + ' made an account.');
         });
       });
     }
