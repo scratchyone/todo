@@ -49,7 +49,10 @@ class App extends React.Component {
         return response.json();
       })
       .then(doc => {
-        if (doc.authorized) {
+        if (
+          doc.authorized &&
+          JSON.stringify(this.state.todos) !== JSON.stringify(doc.todos)
+        ) {
           this.setState({
             todos: doc.todos
           });
@@ -79,7 +82,7 @@ class App extends React.Component {
 
   remove(i) {
     let newtodos = this.state.todos;
-    newtodos[i].hidden = true;
+    newtodos.splice(i, 1);
     this.setState({ todos: newtodos });
     this.updateTodos(newtodos);
   }
@@ -154,21 +157,19 @@ class Todos extends React.Component {
     ];
     let todos = [];
     for (let i in this.props.items) {
-      if (!this.props.items[i].hidden) {
-        todos.push(
-          <Todo
-            strikethrough={() => {
-              this.props.strikethrough(i);
-            }}
-            remove={() => {
-              this.props.remove(i);
-            }}
-            item={this.props.items[i]}
-            key={this.props.items[i].key}
-            first={this.props.first}
-          />
-        );
-      }
+      todos.push(
+        <Todo
+          strikethrough={() => {
+            this.props.strikethrough(i);
+          }}
+          remove={() => {
+            this.props.remove(i);
+          }}
+          item={this.props.items[i]}
+          key={this.props.items[i].key}
+          first={this.props.first}
+        />
+      );
     }
     if (this.props.items.length === 0) {
       todos.push(
