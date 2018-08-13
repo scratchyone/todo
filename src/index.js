@@ -57,7 +57,6 @@ class App extends React.Component {
         return response.json();
       })
       .then(doc => {
-        console.log(doc.authorized);
         if (
           doc.authorized &&
           JSON.stringify(this.state.todos) !== JSON.stringify(doc.todos)
