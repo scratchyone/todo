@@ -1,5 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Link, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+  Link,
+  Redirect,
+  withRouter
+} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import './output.css';
 import './index.css';
@@ -19,7 +26,8 @@ class App extends React.Component {
     this.state = {
       todos: [],
       first: true,
-      fetchTodos: null
+      fetchTodos: null,
+      authorized: false
     };
   }
   updateTodos(todos) {
@@ -49,6 +57,7 @@ class App extends React.Component {
         return response.json();
       })
       .then(doc => {
+        console.log(doc.authorized);
         if (
           doc.authorized &&
           JSON.stringify(this.state.todos) !== JSON.stringify(doc.todos)
@@ -56,7 +65,11 @@ class App extends React.Component {
           this.setState({
             todos: doc.todos
           });
+        } else if (!doc.authorized && this.state.authorized) {
+          this.props.history.push('/');
         }
+        if (doc.authorized !== this.state.authorized)
+          this.setState({ authorized: doc.authorized });
       })
       .catch(function(err) {
         // Error :(
@@ -566,9 +579,12 @@ class SignIn extends React.Component {
     );
   }
 }
+App = withRouter(App);
 ReactDOM.render(
   <BrowserRouter basename="/todo">
-    <App />
+    <div>
+      <App />
+    </div>
   </BrowserRouter>,
   document.getElementById('root')
 );
