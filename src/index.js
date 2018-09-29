@@ -8,8 +8,8 @@ import {
   withRouter
 } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import './output.css';
-import './index.css';
+//import './output.css';
+import './index.scss';
 import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
 import { Offline, Online } from 'react-detect-offline';
@@ -212,7 +212,7 @@ class Todo extends React.Component {
           onClick={() => {
             this.props.strikethrough();
           }}
-          className={'list-item '}
+          className={'todo-text'}
           style={{
             color: this.props.item.done ? '#606f7b' : '',
             textDecorationColor: this.props.item.done ? 'black' : 'transparent',

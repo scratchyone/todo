@@ -1,0 +1,149 @@
+@import './todo.scss';
+
+body {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.animate-color {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.no-touchevents .remove-button:hover {
+  color: #e3342f;
+}
+
+.header {
+  font-family: sans-serif;
+  font-weight: normal;
+}
+
+button {
+  outline: none !important;
+}
+
+.todos {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  font-size: 1.125rem;
+}
+
+.box-holder {
+  max-width: 80vw;
+}
+
+body {
+  height: 100vh;
+  background-color: #f1f5f8;
+}
+
+.holder {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 0.25rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+.header {
+  font-size: 3rem;
+  color: #3d4852;
+  text-align: center;
+}
+
+.item-input {
+  margin-top: 0.5rem;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  display: flex;
+  transition-property: border;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.item-input:focus-within {
+  border-color: #8795a1;
+}
+
+.add-input {
+  padding: 0.25rem;
+  padding-right: 0;
+  width: 100%;
+  outline: none;
+}
+
+.add-button {
+  margin: 0.5rem;
+  margin-left: 0.25rem;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  outline: none !important;
+}
+
+.no-touchevents .add-button:hover,
+.touchevents .forceTouchHover {
+  color: #38c172;
+}
+
+.no-tasks {
+  color: #606f7b;
+}
+
+.easy-input {
+  padding: 0.25rem;
+  padding-right: 0;
+  width: 100%;
+  margin-top: 0.25rem;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  display: flex;
+  outline: none;
+  transition-property: border;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.easy-input:focus {
+  border-color: #8795a1;
+}
+
+.sign {
+  margin-top: 0.25rem;
+  border-radius: 0.25rem;
+  border-color: #3490dc;
+  border-width: 2px;
+  padding: 0.25rem;
+  color: #3490dc;
+  font-weight: 600;
+  outline: none;
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.sign:focus {
+  color: #fff;
+  background-color: #3490dc;
+}
+
+.no-touchevents .sign:hover {
+  color: #fff;
+  background-color: #3490dc;
+}

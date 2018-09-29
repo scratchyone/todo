@@ -1,0 +1,33 @@
+// === MIXINS ===
+@mixin color-transition {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.todo {
+  // An entire todo
+  white-space: nowrap;
+}
+
+.remove-button {
+  //Button to remove a todo
+  @include color-transition();
+  outline: none !important;
+  margin-right: 0.25rem;
+}
+
+.todo-text {
+  // The text of the todo
+  transition-property: color, text-decoration-color,
+    -webkit-text-decoration-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+
+  text-decoration: line-through;
+  color: #22292f;
+}
+
+.no-touchevents .todo-text:hover {
+  color: #606f7b;
+}
