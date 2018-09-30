@@ -1,0 +1,21 @@
+// === CSS FOR THE SIGN IN/OUT PAGES ===
+
+// Input for the username and password
+.username-password-input {
+  padding: 0.25rem;
+  padding-right: 0;
+  width: 100%;
+  margin-top: 0.25rem;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  display: flex;
+  outline: none;
+
+  transition-property: border;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+.username-password-input:focus {
+  border-color: #8795a1;
+}

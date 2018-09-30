@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 //import './output.css';
-import './index.scss';
+import './css/index.scss';
 import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
 import { Offline, Online } from 'react-detect-offline';
@@ -107,52 +107,50 @@ class App extends React.Component {
   }
   render() {
     return (
-      <div className="holder">
-        <div className="box-holder">
-          <div className="box">
-            <Online>
-              <Switch>
-                <Route
-                  exact
-                  path="/todo"
-                  render={() => (
-                    <ToDoContainer
-                      first={this.state.first}
-                      todos={this.state.todos}
-                      add={text => {
-                        this.add(text);
-                      }}
-                      remove={i => {
-                        this.remove(i);
-                      }}
-                      strikethrough={i => {
-                        this.strikethrough(i);
-                      }}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/"
-                  render={() => {
-                    return <SignUp />;
-                  }}
-                />
-                <Route
-                  exact
-                  path="/signin"
-                  render={() => {
-                    return <SignIn />;
-                  }}
-                />
-                <Route render={() => <Redirect to="/" />} />
-              </Switch>
-            </Online>
-            <Offline>
-              You are currently offline. To prevent loss of data, this app only
-              works online.
-            </Offline>
-          </div>
+      <div className="display">
+        <div className="app">
+          <Online>
+            <Switch>
+              <Route
+                exact
+                path="/todo"
+                render={() => (
+                  <ToDoContainer
+                    first={this.state.first}
+                    todos={this.state.todos}
+                    add={text => {
+                      this.add(text);
+                    }}
+                    remove={i => {
+                      this.remove(i);
+                    }}
+                    strikethrough={i => {
+                      this.strikethrough(i);
+                    }}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/"
+                render={() => {
+                  return <SignUp />;
+                }}
+              />
+              <Route
+                exact
+                path="/signin"
+                render={() => {
+                  return <SignIn />;
+                }}
+              />
+              <Route render={() => <Redirect to="/" />} />
+            </Switch>
+          </Online>
+          <Offline>
+            You are currently offline. To prevent loss of data, this app only
+            works online.
+          </Offline>
         </div>
       </div>
     );
@@ -187,14 +185,14 @@ class Todos extends React.Component {
     }
     if (this.props.items.length === 0) {
       todos.push(
-        <div className={this.props.first ? '' : 'no-tasks'} key={0}>
+        <div className={this.props.first ? '' : 'todo-empty'} key={0}>
           {this.props.first
             ? 'Add items with the box below!'
             : congrats[Math.floor(Math.random() * congrats.length)]}
         </div>
       );
     }
-    return <div className="todos">{todos}</div>;
+    return <div className="todo-holder">{todos}</div>;
   }
 }
 
@@ -203,7 +201,7 @@ class Todo extends React.Component {
     return (
       <div className="todo">
         <button
-          className={'remove-button fas fa-times '}
+          className={'todo-remove-button fas fa-times '}
           onClick={() => {
             this.props.remove();
           }}
@@ -212,14 +210,7 @@ class Todo extends React.Component {
           onClick={() => {
             this.props.strikethrough();
           }}
-          className={'todo-text'}
-          style={{
-            color: this.props.item.done ? '#606f7b' : '',
-            textDecorationColor: this.props.item.done ? 'black' : 'transparent',
-            WebkitTextDecorationColor: this.props.item.done
-              ? '#000000'
-              : 'transparent'
-          }}
+          className={'todo-text ' + (this.props.item.done ? 'done' : '')}
         >
           {this.props.item.text}
         </button>
@@ -251,7 +242,7 @@ class ItemInput extends React.Component {
   }
   render() {
     return (
-      <div className={'item-input'}>
+      <div className={'todo-input-holder'}>
         <input
           value={this.state.addvalue}
           onChange={event => {
@@ -262,7 +253,7 @@ class ItemInput extends React.Component {
               this.add();
             }
           }}
-          className="add-input"
+          className="todo-input"
           type="text"
         />
         <button
@@ -270,7 +261,8 @@ class ItemInput extends React.Component {
             this.add();
           }}
           className={
-            'add-button ' + (this.state.forceAddHover ? 'forceTouchHover' : '')
+            'todo-add-button ' +
+            (this.state.forceAddHover ? 'forceTouchHover' : '')
           }
           onMouseDown={() => {
             //alert('mouseup');
@@ -356,7 +348,7 @@ class ToDoContainer extends React.Component {
             onClick={() => {
               this.signout();
             }}
-            className="sign"
+            className="simple-button"
           >
             Sign Out
           </button>
@@ -438,7 +430,7 @@ class SignUp extends React.Component {
             });
           }}
           placeholder="Username"
-          className="easy-input"
+          className="username-password-input"
           type="text"
           value={this.state.username}
         />
@@ -449,12 +441,12 @@ class SignUp extends React.Component {
             });
           }}
           placeholder="Password"
-          className="easy-input"
+          className="username-password-input"
           type="password"
           value={this.state.password}
         />
         <button
-          className="sign"
+          className="simple-button"
           onClick={evt => {
             this.signup(evt);
           }}
@@ -542,7 +534,7 @@ class SignIn extends React.Component {
         <input
           placeholder="Username"
           value={this.state.username}
-          className="easy-input"
+          className="username-password-input"
           type="text"
           onChange={evt => {
             this.setState({
@@ -553,7 +545,7 @@ class SignIn extends React.Component {
         <input
           placeholder="Password"
           value={this.state.password}
-          className="easy-input"
+          className="username-password-input"
           type="password"
           onChange={evt => {
             this.setState({
@@ -562,7 +554,7 @@ class SignIn extends React.Component {
           }}
         />
         <button
-          className="sign"
+          className="simple-button"
           onClick={evt => {
             this.signin(evt);
           }}

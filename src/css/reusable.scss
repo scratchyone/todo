@@ -1,0 +1,31 @@
+// === ALL THE MIXINS AND REUSABLE CLASSES GO HERE ===
+
+@mixin color-transition {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+// Simple button for general use
+.simple-button {
+  margin-top: 0.25rem;
+  border-radius: 0.25rem;
+  border-color: var(--highlight-color);
+  border-width: 2px;
+  padding: 0.25rem;
+  color: var(--highlight-color);
+  font-weight: 600;
+  outline: none;
+
+  transition-property: background-color, color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.simple-button:focus {
+  color: #fff;
+  background-color: var(--highlight-color);
+}
+.no-touchevents .simple-button:hover {
+  color: #fff;
+  background-color: var(--highlight-color);
+}
