@@ -12,7 +12,7 @@
   margin-right: 0.25rem;
 }
 .no-touchevents .todo-remove-button:hover {
-  color: #e3342f;
+  color: var(--remove-item);
 }
 
 // The content of the todo
@@ -25,7 +25,7 @@
   text-decoration: line-through;
   text-decoration-color: transparent;
   -webkit-text-decoration-color: transparent;
-  color: #22292f;
+  color: var(--todo-color);
 }
 .no-touchevents .todo-text:hover {
   color: var(--greyed-out);

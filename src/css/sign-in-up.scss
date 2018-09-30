@@ -9,6 +9,7 @@
   border-style: solid;
   border-width: 2px;
   border-radius: 0.25rem;
+  border-color: var(--input-border);
   display: flex;
   outline: none;
 
@@ -17,5 +18,5 @@
   transition-timing-function: ease;
 }
 .username-password-input:focus {
-  border-color: #8795a1;
+  border-color: var(--input-border-focused);
 }

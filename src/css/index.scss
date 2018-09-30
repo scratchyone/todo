@@ -8,7 +8,7 @@
 body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); // Normalize for mobile
   height: 100vh; // Force fill the screen
-  background-color: #f1f5f8; // Normalize the background color
+  background-color: var(--body-color); // Normalize the background color
 }
 
 button {
@@ -20,7 +20,7 @@ button {
   font-family: sans-serif;
   font-weight: normal;
   font-size: 3rem;
-  color: #3d4852;
+  color: var(--header-color);
   text-align: center;
 }
 
@@ -37,7 +37,7 @@ button {
 // All of the actual page
 .app {
   max-width: 80vw;
-  background-color: #fff;
+  background-color: var(--background-color);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
   border-radius: 0.25rem;
   padding-left: 2rem;

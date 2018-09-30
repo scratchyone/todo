@@ -14,6 +14,7 @@
   border-style: solid;
   border-width: 2px;
   border-radius: 0.25rem;
+  border-color: var(--input-border);
   display: flex;
 
   transition-property: border;
@@ -21,7 +22,7 @@
   transition-timing-function: ease;
 }
 .todo-input-holder:focus-within {
-  border-color: #8795a1;
+  border-color: var(--input-border-focused);
 }
 
 // Input element for todos
@@ -41,10 +42,10 @@
 }
 .no-touchevents .todo-add-button:hover,
 .touchevents .forceTouchHover {
-  color: #38c172;
+  color: var(--add-button);
 }
 
 // Funny phrases when there are no todos
 .todo-empty {
-  color: #606f7b;
+  color: var(--greyed-out);
 }

@@ -1,4 +1,19 @@
 :root {
-  --highlight-color: #3490dc;
-  --greyed-out: #606f7b;
+  // === GENERIC COLORS ===
+  --highlight-color: hsl(207, 71%, 53%);
+  --greyed-out: hsl(207, 12%, 43%);
+
+  // === IMPORTANT COLORS ===
+  --body-color: hsl(206, 33%, 96%);
+  --background-color: hsl(0, 0%, 100%);
+
+  // === SPECIFIC COLORS ===
+  --header-color: hsl(209, 15%, 28%);
+  --todo-color: hsl(208, 16%, 16%);
+
+  --input-border: hsl(208, 21%, 88%);
+  --input-border-focused: hsl(208, 12%, 58%);
+
+  --remove-item: hsl(2, 76%, 54%);
+  --add-button: hsl(145, 55%, 49%);
 }
