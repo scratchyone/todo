@@ -14,7 +14,7 @@
   border-width: 2px;
   padding: 0.25rem;
   color: var(--highlight-color);
-  background-color: var(--background-color)
+  background-color: var(--background-color);
   font-weight: 600;
   outline: none;
 
@@ -22,7 +22,8 @@
   transition-duration: 0.3s;
   transition-timing-function: ease;
 }
-.no-touchevents .simple-button:hover, simple-button:focus {
+.no-touchevents .simple-button:hover,
+simple-button:focus {
   color: var(--background-color);
   background-color: var(--highlight-color);
 }
