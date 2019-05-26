@@ -14,6 +14,8 @@ import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
 import { Offline, Online } from 'react-detect-offline';
 import registerServiceWorker from './registerServiceWorker';
+var showdown = require('showdown'),
+  converter = new showdown.Converter();
 const firebase = window.firebase;
 var firebaseConfig = {
   apiKey: 'AIzaSyBxYWnOE-ZiFR1yoc9TQMv96OwPb8fIPzk',
@@ -103,10 +105,33 @@ class App extends React.Component {
     this.setState({ todos: newtodos });
     this.updateTodos(newtodos);
   }
-
+  moveup(i) {
+    if (Number(i) !== 0) {
+      let newtodos = this.state.todos;
+      var element = newtodos[Number(i)];
+      newtodos.splice(Number(i), 1);
+      newtodos.splice(Number(i) - 1, 0, element);
+      this.setState({ todos: newtodos });
+      this.updateTodos(newtodos);
+    }
+  }
+  movedown(i) {
+    if (Number(i) !== this.state.todos.length - 1) {
+      let newtodos = this.state.todos;
+      var element = newtodos[Number(i)];
+      newtodos.splice(Number(i), 1);
+      newtodos.splice(Number(i) + 1, 0, element);
+      this.setState({ todos: newtodos });
+      this.updateTodos(newtodos);
+    }
+  }
   add(text) {
     let newtodos = this.state.todos;
-    newtodos.push({ text: text, done: false, key: uuidv1() });
+    newtodos.push({
+      text: text,
+      done: false,
+      key: uuidv1()
+    });
     this.setState({ todos: newtodos, first: false });
     this.updateTodos(newtodos);
   }
@@ -128,6 +153,12 @@ class App extends React.Component {
                     }}
                     remove={i => {
                       this.remove(i);
+                    }}
+                    moveup={i => {
+                      this.moveup(i);
+                    }}
+                    movedown={i => {
+                      this.movedown(i);
                     }}
                     strikethrough={i => {
                       this.strikethrough(i);
@@ -178,20 +209,41 @@ class Todos extends React.Component {
           strikethrough={() => {
             this.props.strikethrough(i);
           }}
+          moveup={() => {
+            this.props.moveup(i);
+          }}
+          movedown={() => {
+            this.props.movedown(i);
+          }}
           remove={() => {
             this.props.remove(i);
           }}
           item={this.props.items[i]}
           key={this.props.items[i].key}
           first={this.props.first}
+          editing={this.props.editing}
         />
       );
     }
     if (this.props.items.length === 0) {
       todos.push(
-        <div className={this.props.first ? '' : 'todo-empty'} key={0}>
+        <div
+          className={(this.props.first ? '' : 'todo-empty') + ' text-center'}
+          key={0}
+        >
           {this.props.first
-            ? 'Add items with the box below!'
+            ? [
+                'Add items with the box below!',
+                <br key={Math.random()} />,
+                <a
+                  className="text-blue-600 hover:text-blue-700 color-transition"
+                  href="https://www.markdownguide.org/cheat-sheet/"
+                  key={Math.random()}
+                >
+                  Markdown
+                </a>,
+                ' is supported.'
+              ]
             : congrats[Math.floor(Math.random() * congrats.length)]}
         </div>
       );
@@ -205,6 +257,22 @@ class Todo extends React.Component {
     return (
       <div className="todo">
         <button
+          onClick={() => {
+            this.props.moveup();
+          }}
+          style={{ display: this.props.editing ? '' : 'none' }}
+        >
+          <i className="fas fa-angle-up" />
+        </button>
+        <button
+          onClick={() => {
+            this.props.movedown();
+          }}
+          style={{ display: this.props.editing ? '' : 'none' }}
+        >
+          <i className="fas fa-angle-down" />
+        </button>
+        <button
           className={'todo-remove-button fas fa-times '}
           onClick={() => {
             this.props.remove();
@@ -215,9 +283,10 @@ class Todo extends React.Component {
             this.props.strikethrough();
           }}
           className={'todo-text ' + (this.props.item.done ? 'done' : '')}
-        >
-          {this.props.item.text}
-        </button>
+          dangerouslySetInnerHTML={{
+            __html: converter.makeHtml(this.props.item.text)
+          }}
+        />
       </div>
     );
   }
@@ -288,7 +357,7 @@ class ItemInput extends React.Component {
 class ToDoContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { editing: false };
   }
   signout() {
     firebase.auth().signOut();
@@ -316,7 +385,18 @@ class ToDoContainer extends React.Component {
           <title>My Todos</title>
         </Helmet>
         {this.props.uid === false ? <Redirect to="/" /> : ''}
-        <h1 className="header">To-Do</h1>
+        <h1 className="header">
+          <span>To-Do</span>
+          <span>
+            <button
+              onClick={() => {
+                this.setState({ editing: !this.state.editing });
+              }}
+            >
+              <i className="ml-2 text-base far fa-caret-square-down" />
+            </button>
+          </span>
+        </h1>
         <Todos
           strikethrough={i => {
             this.props.strikethrough(i);
@@ -326,6 +406,13 @@ class ToDoContainer extends React.Component {
           }}
           items={this.props.todos}
           first={this.props.first}
+          editing={this.state.editing}
+          movedown={i => {
+            this.props.movedown(i);
+          }}
+          moveup={i => {
+            this.props.moveup(i);
+          }}
         />
         <ItemInput
           add={text => {
@@ -344,7 +431,7 @@ class ToDoContainer extends React.Component {
         </div>
         <div className="text-center mt-1">
           <button
-            className="text-blue-900"
+            className="text-blue-900 hover:text-blue-800 color-transition"
             onClick={() => {
               this.emailTodos();
             }}
