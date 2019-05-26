@@ -173,21 +173,19 @@ class Todos extends React.Component {
     ];
     let todos = [];
     for (let i in this.props.items) {
-      if (!this.props.items[i].hidden) {
-        todos.push(
-          <Todo
-            strikethrough={() => {
-              this.props.strikethrough(i);
-            }}
-            remove={() => {
-              this.props.remove(i);
-            }}
-            item={this.props.items[i]}
-            key={this.props.items[i].key}
-            first={this.props.first}
-          />
-        );
-      }
+      todos.push(
+        <Todo
+          strikethrough={() => {
+            this.props.strikethrough(i);
+          }}
+          remove={() => {
+            this.props.remove(i);
+          }}
+          item={this.props.items[i]}
+          key={this.props.items[i].key}
+          first={this.props.first}
+        />
+      );
     }
     if (this.props.items.length === 0) {
       todos.push(
