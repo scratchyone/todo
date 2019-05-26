@@ -35,7 +35,7 @@ function fakeEmail() {
     'email',
     'company',
     'school',
-    'workplace'
+    'buisness'
   ];
   let tlds = ['com', 'org', 'net', 'xyz', 'biz'];
   return (
@@ -364,7 +364,9 @@ class SignUp extends React.Component {
     this.state = {
       error: '',
       username: '',
-      password: ''
+      password: '',
+      fakeEmail: fakeEmail(),
+      fakePassword: '•'.repeat(Math.floor(Math.random() * (9 - 5 + 1) + 5))
     };
   }
   signup(evt) {
@@ -381,7 +383,7 @@ class SignUp extends React.Component {
   }
   render() {
     return (
-      <div className="text-center">
+      <div className="">
         {this.props.uid ? <Redirect to="/todo" /> : ''}
         <Helmet>
           <title>Sign Up</title>
@@ -393,7 +395,7 @@ class SignUp extends React.Component {
               username: evt.target.value
             });
           }}
-          placeholder={fakeEmail()}
+          placeholder={this.state.fakeEmail}
           className="username-password-input"
           type="text"
           value={this.state.username}
@@ -404,7 +406,7 @@ class SignUp extends React.Component {
               password: evt.target.value
             });
           }}
-          placeholder={'•'.repeat(Math.floor(Math.random() * (9 - 5 + 1) + 5))}
+          placeholder={this.state.fakePassword}
           className="username-password-input"
           type="password"
           value={this.state.password}
@@ -418,7 +420,7 @@ class SignUp extends React.Component {
           Sign Up
         </button>
         <div className="mt-1 text-red-600">{this.state.error}</div>
-        <div className="mt-1 text-gray-900">
+        <div className="mt-1 text-gray-900 mr-10">
           Existing user?
           <Link className="ml-1 text-blue-600 no-underline" to="/signin">
             Sign In
@@ -435,7 +437,9 @@ class SignIn extends React.Component {
     this.state = {
       error: '',
       username: '',
-      password: ''
+      password: '',
+      fakeEmail: fakeEmail(),
+      fakePassword: '•'.repeat(Math.floor(Math.random() * (9 - 5 + 1) + 5))
     };
   }
   signin(evt) {
@@ -459,7 +463,7 @@ class SignIn extends React.Component {
         </Helmet>
         <h1 className="header mb-2">Sign In</h1>
         <input
-          placeholder={fakeEmail()}
+          placeholder={this.state.fakeEmail}
           value={this.state.username}
           className="username-password-input"
           type="text"
@@ -470,7 +474,7 @@ class SignIn extends React.Component {
           }}
         />
         <input
-          placeholder={'•'.repeat(Math.floor(Math.random() * (9 - 5 + 1) + 5))}
+          placeholder={this.state.fakePassword}
           value={this.state.password}
           className="username-password-input"
           type="password"
