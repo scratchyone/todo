@@ -24,6 +24,28 @@ var firebaseConfig = {
   messagingSenderId: '1087180250922',
   appId: '1:1087180250922:web:90ba6f88e2007a7c'
 };
+function fakeEmail() {
+  let prefixes = ['example', 'person', 'name', 'user', 'guy', 'username'];
+  let postfixes = [
+    'example',
+    'gmail',
+    'outlook',
+    'aol',
+    'website',
+    'email',
+    'company',
+    'school',
+    'workplace'
+  ];
+  let tlds = ['com', 'org', 'net', 'xyz', 'biz'];
+  return (
+    prefixes[Math.floor(Math.random() * prefixes.length)] +
+    '@' +
+    postfixes[Math.floor(Math.random() * postfixes.length)] +
+    '.' +
+    tlds[Math.floor(Math.random() * tlds.length)]
+  );
+}
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 let Swal = window.Swal;
@@ -359,7 +381,7 @@ class SignUp extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="text-center">
         {this.props.uid ? <Redirect to="/todo" /> : ''}
         <Helmet>
           <title>Sign Up</title>
@@ -371,7 +393,7 @@ class SignUp extends React.Component {
               username: evt.target.value
             });
           }}
-          placeholder="Email"
+          placeholder={fakeEmail()}
           className="username-password-input"
           type="text"
           value={this.state.username}
@@ -382,7 +404,7 @@ class SignUp extends React.Component {
               password: evt.target.value
             });
           }}
-          placeholder="Password"
+          placeholder={'•'.repeat(Math.floor(Math.random() * (9 - 5 + 1) + 5))}
           className="username-password-input"
           type="password"
           value={this.state.password}
@@ -437,7 +459,7 @@ class SignIn extends React.Component {
         </Helmet>
         <h1 className="header mb-2">Sign In</h1>
         <input
-          placeholder="Email"
+          placeholder={fakeEmail()}
           value={this.state.username}
           className="username-password-input"
           type="text"
@@ -448,7 +470,7 @@ class SignIn extends React.Component {
           }}
         />
         <input
-          placeholder="Password"
+          placeholder={'•'.repeat(Math.floor(Math.random() * (9 - 5 + 1) + 5))}
           value={this.state.password}
           className="username-password-input"
           type="password"
