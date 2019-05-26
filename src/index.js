@@ -14,75 +14,59 @@ import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
 import { Offline, Online } from 'react-detect-offline';
 import registerServiceWorker from './registerServiceWorker';
-let api = 'https://vps.scratchyone.com/todo';
-if (
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
-)
-  api = 'http://localhost:3000';
+const firebase = window.firebase;
+var firebaseConfig = {
+  apiKey: 'AIzaSyBxYWnOE-ZiFR1yoc9TQMv96OwPb8fIPzk',
+  authDomain: 'scratchyonetodoapp.firebaseapp.com',
+  databaseURL: 'https://scratchyonetodoapp.firebaseio.com',
+  projectId: 'scratchyonetodoapp',
+  storageBucket: 'scratchyonetodoapp.appspot.com',
+  messagingSenderId: '1087180250922',
+  appId: '1:1087180250922:web:90ba6f88e2007a7c'
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       todos: [],
       first: true,
-      fetchTodos: null,
-      authorized: false
+      uid: null,
+      loaded: false
     };
   }
   updateTodos(todos) {
-    fetch(api + '/settodos?', {
-      method: 'post',
-      credentials: 'include',
-      body: JSON.stringify({ todos: todos }),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        return response.json();
+    //NEEDED: Instead of replacing array, add todos using firebase api
+    db.collection('users')
+      .doc(this.state.uid)
+      .update({
+        todos: todos
       })
-      .then(doc => {})
-      .catch(function(err) {
-        // Error :(
-      });
-  }
-  fetchTodos() {
-    fetch(api + '/info', {
-      method: 'get',
-      credentials: 'include'
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        if (
-          doc.authorized &&
-          JSON.stringify(this.state.todos) !== JSON.stringify(doc.todos)
-        ) {
-          this.setState({
-            todos: doc.todos
-          });
-        } else if (!doc.authorized && this.state.authorized) {
-          this.props.history.push('/');
-        }
-        if (doc.authorized !== this.state.authorized)
-          this.setState({ authorized: doc.authorized });
-      })
-      .catch(function(err) {
-        // Error :(
+      .catch(function(error) {
+        // The document probably doesn't exist.
+        console.error('Error updating document: ', error);
       });
   }
   componentDidMount() {
-    this.fetchTodos();
-    let fetchTodos = window.setInterval(() => {
-      this.fetchTodos();
-    }, 1000);
-    this.setState({ fetchTodos: fetchTodos });
-  }
-  componentWillUnmount() {
-    clearInterval(this.state.fetchTodos);
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in.
+        this.setState({ uid: user.uid });
+        db.collection('users')
+          .doc(this.state.uid)
+          .onSnapshot(doc => {
+            if (doc.data()) {
+              this.setState({ todos: doc.data().todos });
+            }
+          });
+        // ...
+      } else {
+        // User is signed out.
+        this.setState({ uid: false });
+      }
+    });
   }
 
   strikethrough(i) {
@@ -127,6 +111,7 @@ class App extends React.Component {
                     strikethrough={i => {
                       this.strikethrough(i);
                     }}
+                    uid={this.state.uid}
                   />
                 )}
               />
@@ -134,14 +119,14 @@ class App extends React.Component {
                 exact
                 path="/"
                 render={() => {
-                  return <SignUp />;
+                  return <SignUp uid={this.state.uid} />;
                 }}
               />
               <Route
                 exact
                 path="/signin"
                 render={() => {
-                  return <SignIn />;
+                  return <SignIn uid={this.state.uid} />;
                 }}
               />
               <Route render={() => <Redirect to="/" />} />
@@ -284,41 +269,10 @@ class ItemInput extends React.Component {
 class ToDoContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      redirect: ''
-    };
-  }
-  componentDidMount() {
-    fetch(api + '/info', {
-      method: 'get',
-      credentials: 'include'
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        if (!doc.authorized) {
-          this.setState({ redirect: <Redirect to="/" /> });
-        }
-      })
-      .catch(function(err) {
-        // Error :(
-      });
+    this.state = {};
   }
   signout() {
-    fetch(api + '/signout?', {
-      method: 'post',
-      credentials: 'include'
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        this.setState({ redirect: <Redirect to="/" /> });
-      })
-      .catch(function(err) {
-        // Error :(
-      });
+    firebase.auth().signOut();
   }
   render() {
     return (
@@ -326,7 +280,7 @@ class ToDoContainer extends React.Component {
         <Helmet>
           <title>My Todos</title>
         </Helmet>
-        {this.state.redirect}
+        {this.props.uid === false ? <Redirect to="/" /> : ''}
         <h1 className="header">To-Do</h1>
         <Todos
           strikethrough={i => {
@@ -361,8 +315,6 @@ class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirect: '',
-      visible: 'hidden',
       error: '',
       username: '',
       password: ''
@@ -370,55 +322,20 @@ class SignUp extends React.Component {
   }
   signup(evt) {
     evt.target.blur();
-    fetch(api + '/signup?', {
-      method: 'post',
-      credentials: 'include',
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
-      }),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        if (doc.success) {
-          this.setState({ redirect: <Redirect to="/todo" /> });
-        } else {
-          this.setState({ error: doc.error });
-        }
-      })
-      .catch(function(err) {
-        // Error :(
-      });
-  }
-  componentDidMount() {
-    fetch(api + '/info', {
-      method: 'get',
-      credentials: 'include'
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        if (doc.authorized) {
-          this.setState({ redirect: <Redirect to="/todo" /> });
-        } else {
-          this.setState({ visible: '' });
-        }
-      })
-      .catch(function(err) {
-        // Error :(
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.username, this.state.password)
+      .catch(error => {
+        // Handle Errors here.
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        this.setState({ error: errorMessage });
       });
   }
   render() {
     return (
-      <div style={{ visibility: this.state.visible }}>
-        {this.state.redirect}
+      <div>
+        {this.props.uid ? <Redirect to="/todo" /> : ''}
         <Helmet>
           <title>Sign Up</title>
         </Helmet>
@@ -429,7 +346,7 @@ class SignUp extends React.Component {
               username: evt.target.value
             });
           }}
-          placeholder="Username"
+          placeholder="Email"
           className="username-password-input"
           type="text"
           value={this.state.username}
@@ -453,10 +370,10 @@ class SignUp extends React.Component {
         >
           Sign Up
         </button>
-        <div className="mt-1 text-red">{this.state.error}</div>
-        <div className="mt-1 text-grey-darkest">
+        <div className="mt-1 text-red-600">{this.state.error}</div>
+        <div className="mt-1 text-gray-900">
           Existing user?
-          <Link className="ml-1 text-blue-dark no-underline" to="/signin">
+          <Link className="ml-1 text-blue-600 no-underline" to="/signin">
             Sign In
           </Link>
         </div>
@@ -469,8 +386,6 @@ class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirect: '',
-      visible: 'hidden',
       error: '',
       username: '',
       password: ''
@@ -478,61 +393,26 @@ class SignIn extends React.Component {
   }
   signin(evt) {
     evt.target.blur();
-    fetch(api + '/signin?', {
-      method: 'post',
-      credentials: 'include',
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
-      }),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        if (doc.success) {
-          this.setState({ redirect: <Redirect to="/todo" /> });
-        } else {
-          this.setState({ error: doc.error });
-        }
-      })
-      .catch(function(err) {
-        // Error :(
-      });
-  }
-  componentDidMount() {
-    fetch(api + '/info', {
-      method: 'get',
-      credentials: 'include'
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(doc => {
-        if (doc.authorized) {
-          this.setState({ redirect: <Redirect to="/todo" /> });
-        } else {
-          this.setState({ visible: '' });
-        }
-      })
-      .catch(function(err) {
-        // Error :(
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.username, this.state.password)
+      .catch(error => {
+        // Handle Errors here.
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        this.setState({ error: errorMessage });
       });
   }
   render() {
     return (
-      <div style={{ visiblility: this.state.visible }}>
-        {this.state.redirect}
+      <div>
+        {this.props.uid ? <Redirect to="/todo" /> : ''}
         <Helmet>
           <title>Sign In</title>
         </Helmet>
         <h1 className="header mb-2">Sign In</h1>
         <input
-          placeholder="Username"
+          placeholder="Email"
           value={this.state.username}
           className="username-password-input"
           type="text"
@@ -561,10 +441,10 @@ class SignIn extends React.Component {
         >
           Sign In
         </button>
-        <div className="mt-1 text-red">{this.state.error}</div>
-        <div className="mt-1 text-grey-darkest">
+        <div className="mt-1 text-red-600">{this.state.error}</div>
+        <div className="mt-1 text-grey-900">
           Don't have an account?
-          <Link className="ml-1 text-blue-dark no-underline" to="/">
+          <Link className="ml-1 text-blue-600 no-underline" to="/">
             Sign Up
           </Link>
         </div>
