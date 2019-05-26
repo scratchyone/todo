@@ -26,6 +26,7 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+let Swal = window.Swal;
 const db = firebase.firestore();
 class App extends React.Component {
   constructor(props) {
@@ -52,13 +53,11 @@ class App extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        // User is signed in.
-        this.setState({ uid: user.uid });
         db.collection('users')
-          .doc(this.state.uid)
+          .doc(user.uid)
           .onSnapshot(doc => {
             if (doc.data()) {
-              this.setState({ todos: doc.data().todos });
+              this.setState({ todos: doc.data().todos, uid: user.uid });
             }
           });
         // ...
@@ -274,9 +273,25 @@ class ToDoContainer extends React.Component {
   signout() {
     firebase.auth().signOut();
   }
+  emailTodos() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to be sent your todos?',
+      type: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, send them!'
+    }).then(result => {
+      if (result.value) {
+        Swal.fire('Sent!', 'The email has been sent.', 'success');
+        firebase.functions().httpsCallable('sendTodos')();
+      }
+    });
+  }
   render() {
     return (
-      <div>
+      <div style={{ visibility: this.props.uid ? '' : 'hidden' }}>
         <Helmet>
           <title>My Todos</title>
         </Helmet>
@@ -305,6 +320,16 @@ class ToDoContainer extends React.Component {
             className="simple-button"
           >
             Sign Out
+          </button>
+        </div>
+        <div className="text-center mt-1">
+          <button
+            className="text-blue-900"
+            onClick={() => {
+              this.emailTodos();
+            }}
+          >
+            Email me my todos
           </button>
         </div>
       </div>
