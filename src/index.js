@@ -137,7 +137,7 @@ class App extends React.Component {
   }
   render() {
     return (
-      <div className="display">
+      <div className="display" style={{ overflow: 'hidden' }}>
         <div className="app">
           <Online>
             <Switch>
