@@ -265,6 +265,7 @@ class Todo extends React.Component {
           <i className="fas fa-angle-up" />
         </button>
         <button
+          className="mr-2 ml-1"
           onClick={() => {
             this.props.movedown();
           }}
