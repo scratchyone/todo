@@ -21,7 +21,14 @@ if (
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1'
 )
-  api_url = 'http://localhost/todo';
+  api_url = 'http://localhost:99/todo';
+
+let base_api_url = 'https://vps.scratchyone.com/todo';
+if (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+)
+  base_api_url = 'http://localhost:99';
 function getCookie(name) {
   // Split cookie string and get all individual name=value pairs in an array
   var cookieArr = document.cookie.split(';');
@@ -45,13 +52,7 @@ function setCookie(name, value, daysToLive) {
   // Encode value in order to escape semicolons, commas, and whitespace
   var cookie = name + '=' + encodeURIComponent(value);
 
-  if (typeof daysToLive === 'number') {
-    /* Sets the max-age attribute so that the cookie expires
-      after the specified number of days */
-    cookie += '; max-age=' + daysToLive * 24 * 60 * 60;
-
-    document.cookie = cookie;
-  }
+  document.cookie = cookie;
 }
 function fakeEmail() {
   let prefixes = [
@@ -97,6 +98,7 @@ class App extends React.Component {
       uid: false,
       runagain: true,
       online: false,
+      message: false,
     };
   }
   updateTodos(action, id, text, done) {
@@ -121,12 +123,44 @@ class App extends React.Component {
       });
   }
   componentDidMount() {
+    this.check_message();
     this.loadTodos(true);
     window.setInterval(() => {
       this.setState({ runagain: true });
       this.loadTodos(false);
     }, 5000);
   }
+  check_message() {
+    fetch(base_api_url + '/message/messages').then((response) => {
+      response.json().then((response) => {
+        console.log(response);
+        if (response.messages.length > 0) {
+          if (response.messages[0].block) {
+            Swal.fire({
+              title: 'Alert',
+              text: response.messages[0].text,
+              type: 'error',
+              showConfirmButton: false,
+              allowEscapeKey: false,
+              allowOutsideClick: false,
+            });
+            this.setState({ message: true });
+          } else if (getCookie(response.messages[0].uuid) !== 'true') {
+            Swal.fire({
+              title: 'Information',
+              text: response.messages[0].text,
+              type: 'info',
+              showConfirmButton: true,
+              allowEscapeKey: true,
+              allowOutsideClick: true,
+            });
+            setCookie(response.messages[0].uuid, true);
+          }
+        }
+      });
+    });
+  }
+
   loadTodos(go) {
     if ((getCookie('username') !== '' && getCookie('token') !== '') || go) {
       fetch(api_url + '/me', {
@@ -160,7 +194,7 @@ class App extends React.Component {
         })
         .catch((err) => {
           console.log(err);
-          if (!this.state.offline) {
+          if (!this.state.offline && !this.state.message) {
             Swal.fire({
               title: 'Server Error!',
               text:
