@@ -16,7 +16,12 @@ import { Offline, Online } from 'react-detect-offline';
 import registerServiceWorker from './registerServiceWorker';
 var showdown = require('showdown'),
   converter = new showdown.Converter();
-const api_url = 'https://vps.scratchyone.com';
+let api_url = 'https://vps.scratchyone.com/todo';
+if (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+)
+  api_url = 'http://localhost:100';
 function getCookie(name) {
   // Split cookie string and get all individual name=value pairs in an array
   var cookieArr = document.cookie.split(';');
