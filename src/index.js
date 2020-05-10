@@ -50,12 +50,13 @@ function getCookie(name) {
 }
 function setCookie(name, value, daysToLive) {
   // Encode value in order to escape semicolons, commas, and whitespace
-  var cookie = name + '=' + encodeURIComponent(value);
+  var cookie = name + '=' + encodeURIComponent(value) + '; path=/;';
 
   document.cookie = cookie;
 }
 function delCookie(name) {
-  document.cookie = name + '= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+  document.cookie =
+    name + '= ; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
 }
 function fakeEmail() {
   let prefixes = [
