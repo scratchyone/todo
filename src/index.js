@@ -54,6 +54,9 @@ function setCookie(name, value, daysToLive) {
 
   document.cookie = cookie;
 }
+function delCookie(name) {
+  document.cookie = name + '= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+}
 function fakeEmail() {
   let prefixes = [
     'Example',
@@ -183,8 +186,8 @@ class App extends React.Component {
               console.log(response);
             } else {
               this.setState({ uid: false });
-              setCookie('username', '', 100);
-              setCookie('token', '', 100);
+              delCookie('username');
+              delCookie('token');
               console.log(response);
             }
             if (this.state.offline) {
