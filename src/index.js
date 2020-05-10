@@ -187,8 +187,6 @@ class App extends React.Component {
               console.log(response);
             } else {
               this.setState({ uid: false });
-              delCookie('username');
-              delCookie('token');
               console.log(response);
             }
             if (this.state.offline) {
@@ -198,6 +196,8 @@ class App extends React.Component {
         })
         .catch((err) => {
           console.log(err);
+          delCookie('username');
+          delCookie('token');
           if (!this.state.offline && !this.state.message) {
             Swal.fire({
               title: 'Server Error!',
