@@ -166,7 +166,7 @@ class App extends React.Component {
   }
 
   loadTodos(go) {
-    if ((getCookie('username') !== '' && getCookie('token') !== '') || go) {
+    if ((getCookie('username') !== null && getCookie('token') !== null) || go) {
       fetch(api_url + '/me', {
         method: 'POST',
         headers: {
