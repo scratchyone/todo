@@ -14,8 +14,8 @@ import uuidv1 from './uuid.js';
 import ReactDOM from 'react-dom';
 import { Offline, Online } from 'react-detect-offline';
 import registerServiceWorker from './registerServiceWorker';
-var showdown = require('showdown'),
-  converter = new showdown.Converter();
+//var showdown = require('showdown'),
+//converter = new showdown.Converter();
 let api_url = 'https://vps.scratchyone.com/todo/todo';
 if (
   window.location.hostname === 'localhost' ||
