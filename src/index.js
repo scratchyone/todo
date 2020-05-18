@@ -685,9 +685,6 @@ class ToDoContainer extends React.Component {
         console.log(err);
       });
   }
-  changePassword() {
-    changePassword;
-  }
   emailTodos() {
     Swal.fire({
       title: 'Are you sure?',
