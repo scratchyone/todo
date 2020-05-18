@@ -236,6 +236,13 @@ class App extends React.Component {
       //this.updateTodos(newtodos);
     }
   }
+  bold(i) {
+    let newtodos = this.state.todos;
+    let id = newtodos[i].id;
+    newtodos[i].bold = !newtodos[i].bold;
+    this.setState({ todos: newtodos });
+    this.updateTodos('bold', id, '', newtodos[i].bold);
+  }
   movedown(i) {
     if (Number(i) !== this.state.todos.length - 1) {
       let newtodos = this.state.todos;
@@ -253,6 +260,7 @@ class App extends React.Component {
       text: text,
       done: false,
       id: id,
+      bold: false,
     });
     this.setState({ todos: newtodos, first: false });
     this.updateTodos('add', id, text, false);
@@ -300,6 +308,9 @@ class App extends React.Component {
                     }}
                     moveup={(i) => {
                       this.moveup(i);
+                    }}
+                    bold={(i) => {
+                      this.bold(i);
                     }}
                     movedown={(i) => {
                       this.movedown(i);
@@ -375,6 +386,9 @@ class Todos extends React.Component {
           }}
           movedown={() => {
             this.props.movedown(i);
+          }}
+          bold={() => {
+            this.props.bold(i);
           }}
           remove={() => {
             this.props.remove(i);
@@ -452,21 +466,13 @@ class Todo extends React.Component {
     return (
       <div className="todo">
         <button
-          onClick={() => {
-            this.props.moveup();
-          }}
-          style={{ display: this.props.editing ? '' : 'none' }}
-        >
-          <i className="fas fa-angle-up" />
-        </button>
-        <button
           className="mr-2 ml-1"
           onClick={() => {
-            this.props.movedown();
+            this.props.bold();
           }}
           style={{ display: this.props.editing ? '' : 'none' }}
         >
-          <i className="fas fa-angle-down" />
+          <i className="fas fa-bold" />
         </button>
         <button
           className={'todo-remove-button fas fa-times '}
@@ -478,11 +484,17 @@ class Todo extends React.Component {
           onClick={() => {
             this.props.strikethrough();
           }}
-          className={'todo-text ' + (this.props.item.done ? 'done' : '')}
-          dangerouslySetInnerHTML={{
-            __html: converter.makeHtml(this.props.item.text),
-          }}
-        />
+          className={
+            'todo-text ' +
+            (this.props.item.done ? 'done ' : '') +
+            (this.props.item.bold ? 'font-bold' : '')
+          }
+          //dangerouslySetInnerHTML={{
+          //  __html: converter.makeHtml(this.props.item.text),
+          //}}
+        >
+          {this.props.item.text}
+        </button>
       </div>
     );
   }
@@ -749,7 +761,7 @@ class ToDoContainer extends React.Component {
         {this.props.uid === false ? <Redirect to="/" /> : ''}
         <h1 className="header">
           <span>To-Do</span>
-          <span className="hidden">
+          <span>
             <button
               onClick={() => {
                 this.setState({ editing: !this.state.editing });
@@ -769,6 +781,9 @@ class ToDoContainer extends React.Component {
           items={this.props.todos}
           first={this.props.first}
           editing={this.state.editing}
+          bold={(i) => {
+            this.props.bold(i);
+          }}
           movedown={(i) => {
             this.props.movedown(i);
           }}
