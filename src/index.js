@@ -260,6 +260,28 @@ class App extends React.Component {
   render() {
     return (
       <div className="display" style={{ overflow: 'hidden' }}>
+        <div
+          className={
+            'w-full bg-gray-800 absolute top-0 left-0 flex flex-row flex-start items-center' +
+            (this.state.uid ? '' : ' hidden')
+          }
+        >
+          <Link to="todo" className="m-1 ml-2 text-white text-2xl">
+            To-Do
+          </Link>
+          <a
+            href="../../todo_admin"
+            className={
+              'm-1 ml-10 text-white text-lg' +
+              (getCookie('username') === 'admin' ? '' : ' hidden')
+            }
+          >
+            Admin Panel
+          </a>
+          <Link to="account" className="m-1 ml-10 text-white text-lg">
+            Account
+          </Link>
+        </div>
         <div className="app">
           <Online>
             <Switch>
@@ -299,6 +321,13 @@ class App extends React.Component {
                       uid={this.state.uid}
                     />
                   );
+                }}
+              />
+              <Route
+                exact
+                path="/account"
+                render={() => {
+                  return <Account uid={this.state.uid} />;
                 }}
               />
               <Route
@@ -381,6 +410,40 @@ class Todos extends React.Component {
       );
     }
     return <div className="todo-holder">{todos}</div>;
+  }
+}
+
+class Account extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1 className="header">
+          <span>My Account</span>
+        </h1>
+        <span className={(this.props.uid ? 'hidden' : '') + ' text-center'}>
+          No account logged in!
+          <div className="text-center mt-1">
+            <Link to="/">
+              <button className="simple-button">Go to homepage</button>
+            </Link>
+          </div>
+        </span>
+        <span className={(this.props.uid ? '' : 'hidden') + ' text-center'}>
+          <div className="flex">
+            <span className="w-1/2 text-left">Username</span>
+            <span className="w-1/2 font-bold text-left">
+              {getCookie('username')}
+            </span>
+          </div>
+          <div className="text-center mt-1">
+            <button onClick={changePassword} className="simple-button">
+              Change Password
+            </button>
+          </div>
+          <SignOut />
+        </span>
+      </div>
+    );
   }
 }
 
@@ -487,6 +550,115 @@ class ItemInput extends React.Component {
     );
   }
 }
+class SignOut extends React.Component {
+  signout() {
+    fetch(api_url + '/logout', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: 'Basic Og==',
+      },
+      body: JSON.stringify({
+        username: getCookie('username'),
+        token: getCookie('token'),
+      }),
+    })
+      .then((response) => {
+        response.json().then((response) => {
+          console.log(response);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  render() {
+    return (
+      <div className="text-center mt-1">
+        <button
+          onClick={() => {
+            this.signout();
+          }}
+          className="simple-button"
+        >
+          Sign Out
+        </button>
+      </div>
+    );
+  }
+}
+function changePassword() {
+  Swal.fire({
+    title: 'Enter new password',
+    input: 'text',
+    inputValue: '',
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to write something!';
+      }
+    },
+  }).then((result) => {
+    if (result.value) {
+      Swal.fire({
+        title: 'Enter password again',
+        input: 'text',
+        inputValue: '',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to write something!';
+          }
+        },
+      }).then((result2) => {
+        if (result2.value === result.value) {
+          console.log(result.value);
+          fetch(api_url + '/change_password', {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              authorization: 'Basic Og==',
+            },
+            body: JSON.stringify({
+              username: getCookie('username'),
+              token: getCookie('token'),
+              password: result.value,
+            }),
+          })
+            .then((response) => {
+              response.json().then((response) => {
+                console.log(response);
+
+                if (!response.error) {
+                  Swal.fire(
+                    'Changed!',
+                    'Your password has been changed, and you have been logged out on all devices.',
+                    'success'
+                  );
+                } else {
+                  Swal.fire('Error!', response.error_message, 'error');
+                }
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          Swal.fire(
+            "Passwords don't match",
+            "Your passwords don't match!",
+            'error'
+          );
+        }
+      });
+      //Swal.fire(
+      //  'Currently not available',
+      //  'Due to a change in the backend of this service, the "email my todos" feature is currently unavailable.',
+      //  'error'
+      //);
+    }
+  });
+}
 class ToDoContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -514,76 +686,7 @@ class ToDoContainer extends React.Component {
       });
   }
   changePassword() {
-    Swal.fire({
-      title: 'Enter new password',
-      input: 'text',
-      inputValue: '',
-      showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) {
-          return 'You need to write something!';
-        }
-      },
-    }).then((result) => {
-      if (result.value) {
-        Swal.fire({
-          title: 'Enter password again',
-          input: 'text',
-          inputValue: '',
-          showCancelButton: true,
-          inputValidator: (value) => {
-            if (!value) {
-              return 'You need to write something!';
-            }
-          },
-        }).then((result2) => {
-          if (result2.value === result.value) {
-            console.log(result.value);
-            fetch(api_url + '/change_password', {
-              method: 'POST',
-              headers: {
-                'content-type': 'application/json',
-                authorization: 'Basic Og==',
-              },
-              body: JSON.stringify({
-                username: getCookie('username'),
-                token: getCookie('token'),
-                password: result.value,
-              }),
-            })
-              .then((response) => {
-                response.json().then((response) => {
-                  console.log(response);
-
-                  if (!response.error) {
-                    Swal.fire(
-                      'Changed!',
-                      'Your password has been changed',
-                      'success'
-                    );
-                  } else {
-                    Swal.fire('Error!', response.error_message, 'error');
-                  }
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          } else {
-            Swal.fire(
-              "Passwords don't match",
-              "Your passwords don't match!",
-              'error'
-            );
-          }
-        });
-        //Swal.fire(
-        //  'Currently not available',
-        //  'Due to a change in the backend of this service, the "email my todos" feature is currently unavailable.',
-        //  'error'
-        //);
-      }
-    });
+    changePassword;
   }
   emailTodos() {
     Swal.fire({
@@ -649,7 +752,7 @@ class ToDoContainer extends React.Component {
         {this.props.uid === false ? <Redirect to="/" /> : ''}
         <h1 className="header">
           <span>To-Do</span>
-          <span>
+          <span className="hidden">
             <button
               onClick={() => {
                 this.setState({ editing: !this.state.editing });
@@ -681,26 +784,7 @@ class ToDoContainer extends React.Component {
             this.props.add(text);
           }}
         />
-        <div className="text-center mt-1">
-          <button
-            onClick={() => {
-              this.signout();
-            }}
-            className="simple-button"
-          >
-            Sign Out
-          </button>
-        </div>
-        <div className="text-center mt-1">
-          <button
-            className="text-blue-900 hover:text-blue-800 color-transition"
-            onClick={() => {
-              this.changePassword();
-            }}
-          >
-            Change my password
-          </button>
-        </div>
+        <SignOut />
       </div>
     );
   }
