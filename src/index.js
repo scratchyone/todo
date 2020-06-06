@@ -21,7 +21,8 @@ if (
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1'
 )
-  api_url = 'http://localhost:99/todo';
+  var x = 1;
+//api_url = 'http://localhost:99/todo';
 
 let base_api_url = 'https://vps.scratchyone.com/todo';
 if (
