@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter,
   Route,
@@ -16,13 +16,13 @@ import { Offline, Online } from 'react-detect-offline';
 import registerServiceWorker from './registerServiceWorker';
 //var showdown = require('showdown'),
 //converter = new showdown.Converter();
-let api_url = 'https://vps.scratchyone.com/todo/todo';
+let api_url =
+  'https://vps.scratchyone.com/todo/todo'; /*
 if (
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1'
 )
-  var x = 1;
-//api_url = 'http://localhost:99/todo';
+  api_url = 'http://localhost:99/todo';*/
 
 let base_api_url = 'https://vps.scratchyone.com/todo';
 if (
@@ -93,278 +93,240 @@ function fakeEmail() {
   //    tlds[Math.floor(Math.random() * tlds.length)]
 }
 let Swal = window.Swal;
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todos: [],
-      first: true,
-      loaded: false,
-      uid: false,
-      runagain: true,
-      online: false,
-      message: false,
-    };
-  }
-  updateTodos(action, id, text, done) {
-    fetch(api_url + '/update', {
+
+function updateTodos(action, id, text, done) {
+  fetch(api_url + '/update', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: 'Basic Og==',
+    },
+    body: JSON.stringify({
+      username: getCookie('username'),
+      token: getCookie('token'),
+      action: action,
+      id: id,
+      text: text,
+      done: done,
+    }),
+  })
+    .then((response) => {})
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function check_message(message, setMessage) {
+  fetch(base_api_url + '/message/messages').then((response) => {
+    response.json().then((response) => {
+      console.log(response);
+      if (response.messages.length > 0) {
+        if (response.messages[0].block) {
+          Swal.fire({
+            title: 'Alert',
+            text: response.messages[0].text,
+            type: 'error',
+            showConfirmButton: false,
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+          });
+          setMessage(true);
+        } else if (getCookie(response.messages[0].uuid) !== 'true') {
+          Swal.fire({
+            title: 'Information',
+            text: response.messages[0].text,
+            type: 'info',
+            showConfirmButton: true,
+            allowEscapeKey: true,
+            allowOutsideClick: true,
+          });
+          setCookie(response.messages[0].uuid, true);
+        }
+      }
+    });
+  });
+}
+
+function loadTodos(go, setTodos, setUid) {
+  if ((getCookie('username') !== null && getCookie('token') !== null) || go) {
+    fetch(api_url + '/me', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        authorization: 'Basic Og==',
       },
       body: JSON.stringify({
         username: getCookie('username'),
         token: getCookie('token'),
-        action: action,
-        id: id,
-        text: text,
-        done: done,
       }),
     })
-      .then((response) => {})
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  componentDidMount() {
-    this.check_message();
-    this.loadTodos(true);
-    window.setInterval(() => {
-      this.setState({ runagain: true });
-      this.loadTodos(false);
-    }, 5000);
-  }
-  check_message() {
-    fetch(base_api_url + '/message/messages').then((response) => {
-      response.json().then((response) => {
-        console.log(response);
-        if (response.messages.length > 0) {
-          if (response.messages[0].block) {
-            Swal.fire({
-              title: 'Alert',
-              text: response.messages[0].text,
-              type: 'error',
-              showConfirmButton: false,
-              allowEscapeKey: false,
-              allowOutsideClick: false,
-            });
-            this.setState({ message: true });
-          } else if (getCookie(response.messages[0].uuid) !== 'true') {
-            Swal.fire({
-              title: 'Information',
-              text: response.messages[0].text,
-              type: 'info',
-              showConfirmButton: true,
-              allowEscapeKey: true,
-              allowOutsideClick: true,
-            });
-            setCookie(response.messages[0].uuid, true);
-          }
-        }
-      });
-    });
-  }
-
-  loadTodos(go) {
-    if ((getCookie('username') !== null && getCookie('token') !== null) || go) {
-      fetch(api_url + '/me', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: getCookie('username'),
-          token: getCookie('token'),
-        }),
-      })
-        .then((response) => {
-          response.json().then((response) => {
-            if (!response.error) {
-              this.setState({
-                todos: response.response.user.todos,
-                uid: true,
-              });
-              console.log(response);
-            } else {
-              this.setState({ uid: false });
-              console.log(response);
-            }
-            if (this.state.offline) {
-              window.location.reload();
-            }
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          delCookie('username');
-          delCookie('token');
-          if (!this.state.offline && !this.state.message) {
-            Swal.fire({
-              title: 'Server Error!',
-              text:
-                'We are currently experiencing a problem with our server. Please come back later.',
-              type: 'error',
-              showConfirmButton: false,
-              allowEscapeKey: false,
-              allowOutsideClick: false,
-            });
-            this.setState({ offline: true });
+      .then((response) => {
+        response.json().then((response) => {
+          if (!response.error) {
+            setTodos(response.response.user.todos);
+            setUid(true);
+            console.log(response);
+          } else {
+            setUid(false);
+            console.log(response);
           }
         });
-    }
+      })
+      .catch((err) => {
+        console.log(err);
+        delCookie('username');
+        delCookie('token');
+        if (!this.state.offline && !this.state.message) {
+          Swal.fire({
+            title: 'Server Error!',
+            text:
+              'We are currently experiencing a problem with our server. Please come back later.',
+            type: 'error',
+            showConfirmButton: false,
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+          });
+        }
+      });
   }
-  strikethrough(i) {
+}
+function strikethrough(i, todos, setTodos) {
+  let newtodos = this.state.todos;
+  newtodos[i].done = !newtodos[i].done;
+  setTodos(newtodos);
+  updateTodos('done', newtodos[i].id, '', newtodos[i].done);
+}
+
+function remove(i, todos, setTodos) {
+  let newtodos = this.state.todos;
+  let id = newtodos[i].id;
+  newtodos.splice(i, 1);
+  setTodos(newtodos);
+  this.updateTodos('remove', id, '', false);
+}
+
+function moveup(i, setTodos) {
+  if (Number(i) !== 0) {
     let newtodos = this.state.todos;
-    newtodos[i].done = !newtodos[i].done;
-    this.setState({ todos: newtodos });
-    this.updateTodos('done', newtodos[i].id, '', newtodos[i].done);
+    var element = newtodos[Number(i)];
+    newtodos.splice(Number(i), 1);
+    newtodos.splice(Number(i) - 1, 0, element);
+    setTodos(newtodos);
+    //this.updateTodos(newtodos);
   }
-  remove(i) {
+}
+function bold(i, todos, setTodos) {
+  let newtodos = this.state.todos;
+  let id = newtodos[i].id;
+  newtodos[i].bold = !newtodos[i].bold;
+  setTodos(newtodos);
+  this.updateTodos('bold', id, '', newtodos[i].bold);
+}
+function movedown(i, setTodos) {
+  if (Number(i) !== this.state.todos.length - 1) {
     let newtodos = this.state.todos;
-    let id = newtodos[i].id;
-    newtodos.splice(i, 1);
-    this.setState({ todos: newtodos });
-    this.updateTodos('remove', id, '', false);
+    var element = newtodos[Number(i)];
+    newtodos.splice(Number(i), 1);
+    newtodos.splice(Number(i) + 1, 0, element);
+    setTodos(newtodos);
+    //this.updateTodos(newtodos);
   }
-  moveup(i) {
-    if (Number(i) !== 0) {
-      let newtodos = this.state.todos;
-      var element = newtodos[Number(i)];
-      newtodos.splice(Number(i), 1);
-      newtodos.splice(Number(i) - 1, 0, element);
-      this.setState({ todos: newtodos });
-      //this.updateTodos(newtodos);
-    }
-  }
-  bold(i) {
-    let newtodos = this.state.todos;
-    let id = newtodos[i].id;
-    newtodos[i].bold = !newtodos[i].bold;
-    this.setState({ todos: newtodos });
-    this.updateTodos('bold', id, '', newtodos[i].bold);
-  }
-  movedown(i) {
-    if (Number(i) !== this.state.todos.length - 1) {
-      let newtodos = this.state.todos;
-      var element = newtodos[Number(i)];
-      newtodos.splice(Number(i), 1);
-      newtodos.splice(Number(i) + 1, 0, element);
-      this.setState({ todos: newtodos });
-      //this.updateTodos(newtodos);
-    }
-  }
-  add(text) {
-    let newtodos = this.state.todos;
-    let id = uuidv1();
-    newtodos.push({
+}
+function add(text, todos, setTodos) {
+  let id = uuidv1();
+  setTodos([
+    ...todos,
+    {
       text: text,
       done: false,
       id: id,
       bold: false,
-    });
-    this.setState({ todos: newtodos, first: false });
-    this.updateTodos('add', id, text, false);
-  }
-  render() {
-    return (
-      <div className="display" style={{ overflow: 'hidden' }}>
-        <div
+    },
+  ]);
+  updateTodos('add', id, text, false);
+}
+
+function App() {
+  const [todos, setTodos] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [uid, setUid] = useState(false);
+  const [runagain, setRunagain] = useState(true);
+  const [online, setOnline] = useState(false);
+  const [message, setMessage] = useState(false);
+
+  useEffect(() => {
+    check_message(message, setMessage);
+    loadTodos(true, setTodos, setUid);
+    window.setInterval(() => {
+      setRunagain(true);
+      loadTodos(false, setTodos, setUid);
+    }, 5000);
+  }, []);
+
+  return (
+    <div className="display" style={{ overflow: 'hidden' }}>
+      <div
+        className={
+          'w-full bg-gray-800 absolute top-0 left-0 flex flex-row flex-start items-center' +
+          (uid ? '' : ' hidden')
+        }
+      >
+        <Link to="todo" className="m-1 ml-2 text-white text-2xl">
+          To-Do
+        </Link>
+        <a
+          href="../../todo_admin"
           className={
-            'w-full bg-gray-800 absolute top-0 left-0 flex flex-row flex-start items-center' +
-            (this.state.uid ? '' : ' hidden')
+            'm-1 ml-10 text-white text-lg' +
+            (getCookie('username') === 'admin' ? '' : ' hidden')
           }
         >
-          <Link to="todo" className="m-1 ml-2 text-white text-2xl">
-            To-Do
-          </Link>
-          <a
-            href="../../todo_admin"
-            className={
-              'm-1 ml-10 text-white text-lg' +
-              (getCookie('username') === 'admin' ? '' : ' hidden')
-            }
-          >
-            Admin Panel
-          </a>
-          <Link to="account" className="m-1 ml-10 text-white text-lg">
-            Account
-          </Link>
-        </div>
-        <div className="app">
-          <Online>
-            <Switch>
-              <Route
-                exact
-                path="/todo"
-                render={() => (
-                  <ToDoContainer
-                    first={this.state.first}
-                    todos={this.state.todos}
-                    add={(text) => {
-                      this.add(text);
-                    }}
-                    remove={(i) => {
-                      this.remove(i);
-                    }}
-                    moveup={(i) => {
-                      this.moveup(i);
-                    }}
-                    bold={(i) => {
-                      this.bold(i);
-                    }}
-                    movedown={(i) => {
-                      this.movedown(i);
-                    }}
-                    strikethrough={(i) => {
-                      this.strikethrough(i);
-                    }}
-                    uid={this.state.uid}
-                  />
-                )}
-              />
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  return (
-                    <SignUp
-                      loadTodos={() => this.loadTodos()}
-                      uid={this.state.uid}
-                    />
-                  );
-                }}
-              />
-              <Route
-                exact
-                path="/account"
-                render={() => {
-                  return <Account uid={this.state.uid} />;
-                }}
-              />
-              <Route
-                exact
-                path="/login"
-                render={() => {
-                  return (
-                    <SignIn
-                      loadTodos={() => this.loadTodos()}
-                      uid={this.state.uid}
-                    />
-                  );
-                }}
-              />
-              <Route render={() => <Redirect to="/" />} />
-            </Switch>
-          </Online>
-          <Offline>
-            You are currently offline. To prevent loss of data, this app only
-            works online.
-          </Offline>
-        </div>
+          Admin Panel
+        </a>
+        <Link to="account" className="m-1 ml-10 text-white text-lg">
+          Account
+        </Link>
       </div>
-    );
-  }
+      <div className="app">
+        <Online>
+          <Switch>
+            <Route
+              exact
+              path="/todo"
+              render={() => (
+                <ToDoContainer todos={todos} setTodos={setTodos} uid={uid} />
+              )}
+            />
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return <SignUp setTodos={setTodos} uid={uid} />;
+              }}
+            />
+            <Route
+              exact
+              path="/account"
+              render={() => {
+                return <Account uid={uid} />;
+              }}
+            />
+            <Route
+              exact
+              path="/login"
+              render={() => {
+                return <SignIn setTodos={setTodos} uid={uid} />;
+              }}
+            />
+            <Route render={() => <Redirect to="/" />} />
+          </Switch>
+        </Online>
+        <Offline>
+          You are currently offline. To prevent loss of data, this app only
+          works online.
+        </Offline>
+      </div>
+    </div>
+  );
 }
 
 class Todos extends React.Component {
@@ -379,24 +341,10 @@ class Todos extends React.Component {
     for (let i in this.props.items) {
       todos.push(
         <Todo
-          strikethrough={() => {
-            this.props.strikethrough(i);
-          }}
-          moveup={() => {
-            this.props.moveup(i);
-          }}
-          movedown={() => {
-            this.props.movedown(i);
-          }}
-          bold={() => {
-            this.props.bold(i);
-          }}
-          remove={() => {
-            this.props.remove(i);
-          }}
+          todos={this.props.todos}
+          setTodos={this.props.setTodos}
           item={this.props.items[i]}
           key={this.props.items[i].key}
-          first={this.props.first}
           editing={this.props.editing}
         />
       );
@@ -518,7 +466,7 @@ class ItemInput extends React.Component {
   }
   add() {
     if (this.state.addvalue !== '') {
-      this.props.add(this.state.addvalue);
+      add(this.state.addvalue, this.props.todos, this.props.setTodos);
       this.setState({ addvalue: '' });
     }
   }
@@ -773,30 +721,11 @@ class ToDoContainer extends React.Component {
           </span>
         </h1>
         <Todos
-          strikethrough={(i) => {
-            this.props.strikethrough(i);
-          }}
-          remove={(i) => {
-            this.props.remove(i);
-          }}
+          setTodos={this.props.setTodos}
           items={this.props.todos}
-          first={this.props.first}
           editing={this.state.editing}
-          bold={(i) => {
-            this.props.bold(i);
-          }}
-          movedown={(i) => {
-            this.props.movedown(i);
-          }}
-          moveup={(i) => {
-            this.props.moveup(i);
-          }}
         />
-        <ItemInput
-          add={(text) => {
-            this.props.add(text);
-          }}
-        />
+        <ItemInput setTodos={this.props.setTodos} todos={this.props.todos} />
         <SignOut />
       </div>
     );
@@ -837,7 +766,7 @@ class SignUp extends React.Component {
           if (!response.error) {
             setCookie('username', this.state.username, 100);
             setCookie('token', response.response.token, 100);
-            this.props.loadTodos();
+            loadTodos(this.props.setTodos);
           }
         });
       })
@@ -926,7 +855,7 @@ class SignIn extends React.Component {
           if (!response.error) {
             setCookie('username', this.state.username, 100);
             setCookie('token', response.response.token, 100);
-            this.props.loadTodos();
+            loadTodos(this.props.setTodos);
           }
         });
       })
