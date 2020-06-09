@@ -7,7 +7,7 @@ import {
   checkToken,
 } from '../components/util_funcs.js';
 import { useState, useEffect } from 'react';
-import { api_url, base_api_url } from '../components/constants.js';
+import { api_url, base_api_url, BASE } from '../components/constants.js';
 import Head from 'next/head';
 import Router from 'next/router';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ function signup(username, password, setError) {
         if (!response.error) {
           setCookie('username', username, 100);
           setCookie('token', response.response.token, 100);
-          Router.push('/todo');
+          Router.push(BASE + '/todo');
         }
       });
     })
@@ -46,9 +46,9 @@ function signup(username, password, setError) {
 
 export default function SignUp() {
   useEffect(() => {
-    Router.prefetch('/todo');
+    Router.prefetch(BASE + '/todo');
     checkToken(getCookie('token')).then((valid) => {
-      if (valid) Router.push('/todo');
+      if (valid) Router.push(BASE + '/todo');
     });
   }, []);
   const [fakeEmailGen] = useState(fakeEmail());

@@ -5,49 +5,17 @@ import {
   changePassword,
 } from '../../components/util_funcs.js';
 import { useState, useEffect } from 'react';
-import { api_url, base_api_url } from '../../components/constants.js';
+import { api_url, base_api_url, BASE } from '../../components/constants.js';
 import { SignOut, Bar } from '../../components/comps.js';
 import Head from 'next/head';
 import Router from 'next/router';
 import Link from 'next/link';
 
-function signup(username, password, setError) {
-  console.log({
-    username: username,
-    password: password,
-  });
-  fetch(api_url + '/signup', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      authorization: 'Basic Og==',
-    },
-    body: JSON.stringify({
-      username: username,
-      password: password,
-    }),
-  })
-    .then((response) => {
-      response.json().then((response) => {
-        console.log(response);
-        setError(response.error_message || '');
-        if (!response.error) {
-          setCookie('username', username, 100);
-          setCookie('token', response.response.token, 100);
-          Router.push('/todo');
-        }
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
-
 export default function Account() {
   useEffect(() => {
-    Router.prefetch('/');
+    Router.prefetch(BASE + '/');
     checkToken(getCookie('token')).then((valid) => {
-      if (!valid) Router.push('/');
+      if (!valid) Router.push(BASE + '/');
     });
   }, []);
   return (

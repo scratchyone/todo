@@ -8,7 +8,7 @@ import {
 } from '../../components/util_funcs.js';
 import { ItemInput, SignOut, TodoItem, Bar } from '../../components/comps.js';
 import { useState, useEffect } from 'react';
-import { api_url, base_api_url } from '../../components/constants.js';
+import { api_url, base_api_url, BASE } from '../../components/constants.js';
 import Head from 'next/head';
 import Router from 'next/router';
 import Link from 'next/link';
@@ -40,10 +40,11 @@ export default function TodosPage() {
   const [validToken, setValidToken] = useState(false);
   const [todos, setTodos] = useState([]);
   useEffect(() => {
+    Router.prefetch(BASE + '/');
     loadTodos(setTodos);
     checkToken(getCookie('token')).then((valid) => {
       if (!valid) {
-        Router.push('/');
+        Router.push(BASE + '/');
       } else {
         setValidToken(true);
       }
