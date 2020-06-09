@@ -1,0 +1,39 @@
+/* === CSS FOR A SINGLE TODO ELEMENT ===*/
+
+/* An entire todo*/
+.todo {
+  white-space: nowrap;
+}
+
+/* Button to remove a todo*/
+.todo-remove-button {
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  outline: none !important;
+  margin-right: 0.25rem;
+}
+.todo-remove-button:hover {
+  color: var(--remove-item);
+}
+
+/* The content of the todo*/
+.todo-text {
+  transition-property: color, text-decoration-color,
+    -webkit-text-decoration-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+
+  text-decoration: line-through;
+  text-decoration-color: transparent;
+  -webkit-text-decoration-color: transparent;
+  color: var(--todo-color);
+}
+.todo-text:hover {
+  color: var(--greyed-out);
+}
+.todo-text.done {
+  color: var(--greyed-out);
+  text-decoration-color: black;
+  -webkit-text-decoration-color: black;
+}

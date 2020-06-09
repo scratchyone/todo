@@ -5,19 +5,15 @@ import {
   fakeEmail,
   inputChanged,
   checkToken,
-} from '../components/util_funcs.js';
+} from '../../components/util_funcs.js';
 import { useState, useEffect } from 'react';
-import { api_url, base_api_url } from '../components/constants.js';
+import { api_url, base_api_url } from '../../components/constants.js';
 import Head from 'next/head';
 import Router from 'next/router';
 import Link from 'next/link';
 
 function signup(username, password, setError) {
-  console.log({
-    username: username,
-    password: password,
-  });
-  fetch(api_url + '/signup', {
+  fetch(api_url + '/login', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -44,7 +40,7 @@ function signup(username, password, setError) {
     });
 }
 
-export default function SignUp() {
+export default function SignIn() {
   useEffect(() => {
     Router.prefetch('/todo');
     checkToken(getCookie('token')).then((valid) => {
@@ -61,9 +57,9 @@ export default function SignUp() {
   return (
     <div className="">
       <Head>
-        <title>Sign Up</title>
+        <title>Sign In</title>
       </Head>
-      <h1 className="header mb-2">Sign Up</h1>
+      <h1 className="header mb-2">Sign In</h1>
       <input
         onChange={(evt) => {
           inputChanged(evt, setUsername);
@@ -88,13 +84,13 @@ export default function SignUp() {
           signup(username, password, setError);
         }}
       >
-        Sign Up
+        Sign In
       </button>
       <div className="mt-1 text-red-600">{error}</div>
-      <div className="mt-1 text-gray-900 mr-10">
-        Existing user?
-        <Link href="/login">
-          <a className="ml-1 text-blue-600 no-underline">Sign In</a>
+      <div className="mt-1 text-grey-900">
+        Don't have an account?
+        <Link href="/">
+          <a className="ml-1 text-blue-600 no-underline">Sign Up</a>
         </Link>
       </div>
     </div>

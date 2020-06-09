@@ -1,0 +1,53 @@
+/* === CSS FOR THE TODO PAGE ===*/
+
+/* Holds all the todo items*/
+.todo-holder {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  font-size: 1.125rem;
+}
+
+/* Holds the todo input and the add button*/
+.todo-input-holder {
+  margin-top: 0.5rem;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  border-color: var(--input-border);
+  display: flex;
+
+  transition-property: border;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+.todo-input-holder:focus-within {
+  border-color: var(--input-border-focused);
+}
+
+/* Input element for todos*/
+.todo-input {
+  padding: 0.25rem;
+  padding-right: 0;
+  width: 100%;
+  outline: none;
+}
+
+/* Adds a todo when clicked*/
+.todo-add-button {
+  margin: 0.5rem;
+  margin-left: 0.25rem;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  outline: none !important;
+}
+.todo-add-button:hover,
+.touchevents .forceTouchHover {
+  color: var(--add-button);
+}
+
+/* Funny phrases when there are no todos*/
+.todo-empty {
+  color: var(--greyed-out);
+}

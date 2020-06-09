@@ -1,0 +1,125 @@
+@import './reusable.css';
+@import './colors.css';
+@import './todo-item.css';
+@import './sign-in-up.css';
+@import './todos.css';
+
+body {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Normalize for mobile*/
+  height: 100vh; /* Force fill the screen*/
+  background-color: var(--body-color); /* Normalize the background color*/
+}
+
+button {
+  outline: none !important; /* Remove button outlines, I have my own*/
+}
+
+/* The title of each window*/
+.header {
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 3rem;
+  color: var(--header-color);
+  text-align: center;
+}
+
+/* Holder div, entire page*/
+.display {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* All of the actual page*/
+.app {
+  max-width: 80vw;
+  background-color: var(--background-color);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 0.25rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+body {
+  @apply h-screen;
+}
+
+.holder {
+  @apply mx-auto h-screen flex justify-center items-center;
+}
+
+.box {
+  @apply bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4;
+}
+
+.header {
+  @apply text-5xl text-center;
+}
+
+.list-item {
+  @apply no-underline text-black;
+}
+
+.no-touchevents .list-item:hover {
+}
+
+.remove-button {
+  @apply mr-1;
+}
+
+.no-touchevents .remove-button:hover {
+}
+
+.todos {
+  @apply text-lg;
+}
+
+.item-input {
+  @apply mt-2 border-solid border-2 rounded flex;
+}
+
+.item-input:focus-within {
+}
+
+.add-input {
+  @apply p-1 pr-0 w-full;
+}
+
+.add-button {
+  @apply m-2 ml-1;
+}
+
+.no-touchevents .add-button:hover,
+.touchevents .forceTouchHover {
+}
+
+.no-tasks {
+}
+
+.easy-input {
+  @apply p-1 pr-0 w-full mt-1 border-solid border-2 rounded flex;
+}
+
+.easy-input:focus {
+}
+
+.sign {
+  @apply mt-1 rounded border-2 p-1 font-semibold;
+}
+
+.no-touchevents .sign:hover {
+}
+
+.sign:focus {
+}
