@@ -53,7 +53,7 @@ export function ItemInput(props) {
         }}
         onKeyDown={(event) => {
           if (event.keyCode === 13) {
-            addItemInput(value, setValue);
+            addItemInput(value, setValue, props.todos, props.setTodos);
           }
         }}
         className="todo-input"
@@ -61,7 +61,7 @@ export function ItemInput(props) {
       />
       <button
         onClick={() => {
-          this.add(value, setValue, props.todos, props.setTodos);
+          addItemInput(value, setValue, props.todos, props.setTodos);
         }}
         className="todo-add-button"
       >
