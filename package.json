@@ -9,7 +9,7 @@
     "export": "npm run build; next export; touch out/.nojekyll"
   },
   "dependencies": {
-    "@fullhuman/postcss-purgecss": "^2.2.0",
+    "@fullhuman/postcss-purgecss": "^2.3.0",
     "cssnano": "^4.1.10",
     "next": "9.4.4",
     "postcss-mixins": "^6.2.3",
