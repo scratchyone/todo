@@ -59,7 +59,7 @@ export default function TodosPage() {
       <Head>
         <title>My Todos</title>
       </Head>
-      <h1 className="header">
+      <h1 className="text-5xl font-medium text-gray-800 text-center mb-2">
         <span>To-Do</span>
         <span>
           <button
