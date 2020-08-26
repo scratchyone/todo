@@ -19,7 +19,7 @@ export default function Account() {
     });
   }, []);
   return (
-    <div>
+    <div className="app p-6 pt-2 top_border">
       <Bar />
       <h1 className="header">
         <span>My Account</span>

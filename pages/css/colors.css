@@ -1,7 +1,8 @@
 :root {
   /* === GENERIC COLORS ===*/
-  --highlight-color: hsl(207, 71%, 53%);
+  --highlight-color: hsl(0, 71%, 53%);
   --greyed-out: hsl(207, 12%, 43%);
+  --link-color: hsl(0, 87%, 63%);
 
   /* === IMPORTANT COLORS ===*/
   --body-color: hsl(206, 33%, 96%);

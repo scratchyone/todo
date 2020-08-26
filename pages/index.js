@@ -59,11 +59,13 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   return (
-    <div className="">
+    <div className="app p-6 pt-2 top_border">
       <Head>
         <title>Sign Up</title>
       </Head>
-      <h1 className="header mb-2">Sign Up</h1>
+      <h1 className="text-5xl font-medium text-gray-800 text-center mb-2">
+        Sign Up
+      </h1>
       <input
         onChange={(evt) => {
           inputChanged(evt, setUsername);
@@ -94,7 +96,7 @@ export default function SignUp() {
       <div className="mt-1 text-gray-900 mr-10">
         Existing user?
         <Link href="/login">
-          <a className="ml-1 text-blue-600 no-underline">Sign In</a>
+          <a className="ml-1 no-underline">Sign In</a>
         </Link>
       </div>
     </div>

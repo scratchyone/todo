@@ -44,9 +44,7 @@ class MyDocument extends Document {
         </Head>
         <body>
           <div className="display" style={{ overflow: 'hidden' }}>
-            <div className="app">
-              <Main />
-            </div>
+            <Main />
           </div>
           <NextScript />
         </body>

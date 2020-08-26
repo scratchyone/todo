@@ -51,7 +51,10 @@ export default function TodosPage() {
     });
   }, []);
   return (
-    <div style={{ visibility: validToken ? '' : 'hidden' }}>
+    <div
+      className="app p-6 pt-2 top_border"
+      style={{ visibility: validToken ? '' : 'hidden' }}
+    >
       <Bar />
       <Head>
         <title>My Todos</title>
@@ -99,7 +102,7 @@ function TodosList(props) {
           'Add items with the box below!',
           <br key={Math.random()} />,
           <a
-            className="text-blue-600 hover:text-blue-700 color-transition"
+            className="color-transition"
             href="https://www.markdownguide.org/cheat-sheet/"
             key={Math.random()}
           >

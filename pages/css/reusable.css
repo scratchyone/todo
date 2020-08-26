@@ -10,6 +10,11 @@ color-transition {
   transition-duration: 0.3s;
   transition-timing-function: ease;
 }
+.top_border {
+  border-top-style: solid;
+  border-top-width: 4px;
+  border-color: var(--highlight-color);
+}
 
 /* Simple button for general use*/
 .simple-button {
