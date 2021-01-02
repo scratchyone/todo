@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   add,
   remove,
@@ -7,23 +7,23 @@ import {
   inputChanged,
   getCookie,
   signOut,
-} from './util_funcs.js';
-import { BASE } from './constants.js';
-import Link from 'next/link';
+} from "./util_funcs.js";
+import { BASE } from "./constants.js";
+import Link from "next/link";
 
 export function Bar() {
-  const [username, setUsername] = useState('');
-  useEffect(() => setUsername(getCookie('username')), []);
+  const [username, setUsername] = useState("");
+  useEffect(() => setUsername(getCookie("username")), []);
   return (
     <div className="w-full bg-gray-800 absolute top-0 left-0 flex flex-row flex-start items-center">
-      <Link href={BASE + '/todo'}>
+      <Link href={BASE + "/todo"}>
         <a className="m-1 ml-2 text-white text-2xl">To-Do</a>
       </Link>
       <a
         href="../../todo_admin"
         className={
-          'm-1 ml-10 text-white text-lg' +
-          (username === 'admin' ? '' : ' hidden')
+          "m-1 ml-10 text-white text-lg" +
+          (username === "admin" ? "" : " hidden")
         }
       >
         Admin Panel
@@ -36,16 +36,16 @@ export function Bar() {
 }
 
 function addItemInput(value, setValue, todos, setTodos) {
-  if (value !== '') {
+  if (value !== "") {
     add(value, todos, setTodos);
-    setValue('');
+    setValue("");
   }
 }
 
 export function ItemInput(props) {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   return (
-    <div className={'todo-input-holder'}>
+    <div className={"todo-input-holder"}>
       <input
         value={value}
         onChange={(event) => {
@@ -94,12 +94,12 @@ export function TodoItem(props) {
         onClick={() => {
           bold(props.i, props.todos, props.setTodos);
         }}
-        style={{ display: props.editing ? '' : 'none' }}
+        style={{ display: props.editing ? "" : "none" }}
       >
         <i className="fas fa-bold" />
       </button>
       <button
-        className={'todo-remove-button fas fa-times '}
+        className={"todo-remove-button fas fa-times "}
         onClick={() => {
           remove(props.i, props.todos, props.setTodos);
         }}
@@ -109,9 +109,9 @@ export function TodoItem(props) {
           strikethrough(props.i, props.todos, props.setTodos);
         }}
         className={
-          'todo-text ' +
-          (props.item.done ? 'done ' : '') +
-          (props.item.bold ? 'font-bold' : '')
+          "todo-text " +
+          (props.item.done ? "done " : "") +
+          (props.item.bold ? "font-bold" : "")
         }
         //dangerouslySetInnerHTML={{
         //  __html: converter.makeHtml(this.props.item.text),
@@ -119,6 +119,21 @@ export function TodoItem(props) {
       >
         {props.item.text}
       </button>
+    </div>
+  );
+}
+
+import fieldStyles from "../styles/Field.module.css";
+export function Field(props) {
+  return (
+    <div className={fieldStyles.wrapper + " " + props.className}>
+      <div className={fieldStyles.name}>{props.name}</div>
+      <input
+        onChange={(e) => inputChanged(e, props.setValue)}
+        type={props.type}
+        value={props.value}
+        className={fieldStyles.input}
+      ></input>
     </div>
   );
 }

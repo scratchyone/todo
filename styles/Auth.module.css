@@ -1,0 +1,49 @@
+.app {
+  background: #ffffff;
+  box-shadow: 1px 1px 16px rgba(0, 0, 0, 0.05);
+  border-radius: 21px;
+  padding: 45px;
+  padding-top: 30px;
+}
+.header {
+  color: #222222;
+  font-family: Open Sans;
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+.subtitle {
+  font-family: Open Sans;
+  font-weight: 600;
+  font-size: 18px;
+  color: #4e4e4e;
+  padding-bottom: 20px;
+  padding-right: 10px;
+}
+.subtitle > a {
+  text-decoration-line: underline;
+  color: #cb564f;
+}
+.input {
+  margin-bottom: 26px;
+}
+.button {
+  font-family: Open Sans;
+  font-weight: 600;
+  font-size: 23px;
+  text-align: center;
+  color: #ffffff;
+  background: #5e73bc;
+  border-radius: 10px;
+  width: 100%;
+  padding: 8px;
+}
+.error {
+  font-family: Open Sans;
+  font-weight: 600;
+  font-size: 22px;
+  text-align: center;
+  color: #d16a6a;
+  padding-top: 20px;
+  margin-bottom: -20px;
+}
