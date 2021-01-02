@@ -1,14 +1,7 @@
-import {
-  getCookie,
-  setCookie,
-  delCookie,
-  fakeEmail,
-  inputChanged,
-  checkToken,
-} from "../../components/util_funcs.js";
+import { getCookie, checkToken } from "../../components/util_funcs.js";
 import { ItemInput, SignOut, TodoItem, Bar } from "../../components/comps.js";
 import { useState, useEffect } from "react";
-import { api_url, base_api_url } from "../../components/constants.js";
+import { api_url } from "../../components/constants.js";
 import Head from "next/head";
 import Router from "next/router";
 import Link from "next/link";
@@ -34,7 +27,7 @@ function loadTodos(setTodos) {
     });
   });
 }
-
+import styles from "../../styles/Todos.module.css";
 export default function TodosPage() {
   const [editing, setEditing] = useState("");
   const [validToken, setValidToken] = useState(false);
@@ -52,28 +45,16 @@ export default function TodosPage() {
   }, []);
   return (
     <div
-      className="app p-6 pt-2 top_border"
+      className={styles.app}
       style={{ visibility: validToken ? "" : "hidden" }}
     >
       <Bar />
       <Head>
         <title>My Todos</title>
       </Head>
-      <h1 className="text-5xl font-medium text-gray-800 text-center mb-2">
-        <span>To-Do</span>
-        <span>
-          <button
-            onClick={() => {
-              setEditing(!editing);
-            }}
-          >
-            <i className="ml-2 text-base far fa-caret-square-down" />
-          </button>
-        </span>
-      </h1>
+      <div className={styles.header}>To-Do List</div>
       <TodosList todos={todos} setTodos={setTodos} editing={editing} />
       <ItemInput todos={todos} setTodos={setTodos} />
-      <SignOut />
     </div>
   );
 }
@@ -93,25 +74,7 @@ function TodosList(props) {
     );
   }
   if (props.todos.length === 0) {
-    todos.push(
-      <div
-        className={(props.first ? "" : "todo-empty") + " text-center"}
-        key={0}
-      >
-        {[
-          "Add items with the box below!",
-          <br key={Math.random()} />,
-          <a
-            className="color-transition"
-            href="https://www.markdownguide.org/cheat-sheet/"
-            key={Math.random()}
-          >
-            Markdown
-          </a>,
-          " is supported.",
-        ]}
-      </div>
-    );
+    todos.push(<div key={0}>You don't have any todos.</div>);
   }
-  return <div className="todo-holder">{todos}</div>;
+  return <div className={styles.todoHolder}>{todos}</div>;
 }

@@ -41,11 +41,11 @@ function addItemInput(value, setValue, todos, setTodos) {
     setValue("");
   }
 }
-
+import iiStyles from "../styles/ItemInput.module.css";
 export function ItemInput(props) {
   const [value, setValue] = useState("");
   return (
-    <div className={"todo-input-holder"}>
+    <div className={iiStyles.inputWrapper}>
       <input
         value={value}
         onChange={(event) => {
@@ -56,16 +56,17 @@ export function ItemInput(props) {
             addItemInput(value, setValue, props.todos, props.setTodos);
           }
         }}
-        className="todo-input"
+        className={iiStyles.input}
         type="text"
+        placeholder="Write a new task"
       />
       <button
         onClick={() => {
           addItemInput(value, setValue, props.todos, props.setTodos);
         }}
-        className="todo-add-button"
+        className={iiStyles.button}
       >
-        <i className="fas fa-plus" />
+        Add
       </button>
     </div>
   );
@@ -85,44 +86,45 @@ export function SignOut() {
     </div>
   );
 }
-
+import tiStyles from "../styles/TodoItem.module.css";
+import XSVG from "../public/x.svg";
 export function TodoItem(props) {
   return (
-    <div className="todo">
-      <button
-        className="mr-2 ml-1"
-        onClick={() => {
-          bold(props.i, props.todos, props.setTodos);
-        }}
-        style={{ display: props.editing ? "" : "none" }}
-      >
-        <i className="fas fa-bold" />
-      </button>
-      <button
-        className={"todo-remove-button fas fa-times "}
-        onClick={() => {
-          remove(props.i, props.todos, props.setTodos);
-        }}
-      />
-      <button
+    <div className={tiStyles.todo}>
+      <div
         onClick={() => {
           strikethrough(props.i, props.todos, props.setTodos);
         }}
-        className={
-          "todo-text " +
-          (props.item.done ? "done " : "") +
-          (props.item.bold ? "font-bold" : "")
-        }
-        //dangerouslySetInnerHTML={{
-        //  __html: converter.makeHtml(this.props.item.text),
-        //}}
+        className={tiStyles.todoLeft}
       >
+        <TodoStatus finished={props.item.done} />
         {props.item.text}
-      </button>
+      </div>
+      <div
+        className={tiStyles.todoRight}
+        onClick={() => {
+          remove(props.i, props.todos, props.setTodos);
+        }}
+      >
+        <XSVG className={tiStyles.todoX} />
+      </div>
     </div>
   );
 }
-
+import classnames from "classnames";
+import CheckSVG from "../public/check.svg";
+function TodoStatus(props) {
+  return (
+    <div
+      className={classnames(
+        tiStyles.status,
+        props.finished && tiStyles.statusDone
+      )}
+    >
+      {props.finished && <CheckSVG />}
+    </div>
+  );
+}
 import fieldStyles from "../styles/Field.module.css";
 export function Field(props) {
   return (

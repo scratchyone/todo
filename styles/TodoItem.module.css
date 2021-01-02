@@ -1,0 +1,46 @@
+.todo {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.todoLeft {
+  background: #f9f9f9;
+  border: 2px solid #f8f8f8;
+  box-sizing: border-box;
+  border-radius: 17px 0px 0px 17px;
+  font-family: Open Sans;
+  font-weight: 400;
+  font-size: 21px;
+  color: #222222;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+.todoRight {
+  background: #bc5e5e;
+  border-radius: 0px 17px 17px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.status {
+  border: 3px solid #5e73bc;
+  box-sizing: border-box;
+  border-radius: 100%;
+  height: 23px;
+  width: 23px;
+  margin-right: 10px;
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.statusDone {
+  background: #5e73bc;
+}
