@@ -8,7 +8,6 @@ import {
   getCookie,
   signOut,
 } from "./util_funcs.js";
-import { BASE } from "./constants.js";
 import Link from "next/link";
 
 export function Bar() {
@@ -16,7 +15,7 @@ export function Bar() {
   useEffect(() => setUsername(getCookie("username")), []);
   return (
     <div className="w-full bg-gray-800 absolute top-0 left-0 flex flex-row flex-start items-center">
-      <Link href={BASE + "/todo"}>
+      <Link href={"/todo"}>
         <a className="m-1 ml-2 text-white text-2xl">To-Do</a>
       </Link>
       <a
