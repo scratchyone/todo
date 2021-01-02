@@ -32,4 +32,6 @@
   overflow: auto;
   max-height: 60vh;
   box-sizing: border-box;
+  max-width: 800px;
+  word-break: break-word;
 }
