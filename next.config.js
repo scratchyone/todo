@@ -1,5 +1,3 @@
 module.exports = {
-  experimental: {
-    basePath: '/todo',
-  },
+  basePath: "/todo",
 };
