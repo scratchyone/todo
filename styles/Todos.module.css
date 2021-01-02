@@ -4,7 +4,6 @@
   border-radius: 21px;
   padding: 45px;
   padding-top: 30px;
-  max-height: 90vh;
 }
 @media (max-width: 700px) {
   .app {
@@ -30,7 +29,7 @@
 }
 .todoHolder {
   overflow: auto;
-  max-height: 60vh;
+  max-height: 70vh;
   box-sizing: border-box;
   max-width: 600px;
   word-break: break-word;
