@@ -3,19 +3,19 @@ import {
   setCookie,
   checkToken,
   changePassword,
-} from '../../components/util_funcs.js';
-import { useState, useEffect } from 'react';
-import { api_url, base_api_url, BASE } from '../../components/constants.js';
-import { SignOut, Bar } from '../../components/comps.js';
-import Head from 'next/head';
-import Router from 'next/router';
-import Link from 'next/link';
+} from "../../components/util_funcs.js";
+import { useState, useEffect } from "react";
+import { api_url, base_api_url } from "../../components/constants.js";
+import { SignOut, Bar } from "../../components/comps.js";
+import Head from "next/head";
+import Router from "next/router";
+import Link from "next/link";
 
 export default function Account() {
   useEffect(() => {
-    Router.prefetch(BASE + '/');
-    checkToken(getCookie('token')).then((valid) => {
-      if (!valid) Router.push(BASE + '/');
+    Router.prefetch("/");
+    checkToken(getCookie("token")).then((valid) => {
+      if (!valid) Router.push("/");
     });
   }, []);
   return (
@@ -28,7 +28,7 @@ export default function Account() {
         <div className="flex">
           <span className="w-1/2 text-left">Username</span>
           <span className="w-1/2 font-bold text-left">
-            {getCookie('username')}
+            {getCookie("username")}
           </span>
         </div>
         <div className="text-center mt-1">
