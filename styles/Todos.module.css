@@ -29,7 +29,7 @@
 }
 .todoHolder {
   overflow: auto;
-  max-height: 70vh;
+  max-height: 50vh;
   box-sizing: border-box;
   max-width: 600px;
   word-break: break-word;
