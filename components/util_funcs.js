@@ -1,25 +1,10 @@
 import { api_url, base_api_url } from './constants.js';
 import { v1 as uuidv1 } from 'uuid';
 import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
 export function getCookie(name) {
   if (typeof window !== 'undefined') {
-    // Split cookie string and get all individual name=value pairs in an array
-    var cookieArr = document.cookie.split(';');
-
-    // Loop through the array elements
-    for (var i = 0; i < cookieArr.length; i++) {
-      var cookiePair = cookieArr[i].split('=');
-
-      /* Removing whitespace at the beginning of the cookie name
-      and compare it with the given string */
-      if (name === cookiePair[0].trim()) {
-        // Decode the cookie value and return
-        return decodeURIComponent(cookiePair[1]);
-      }
-    }
-
-    // Return null if not found
-    return null;
+    Cookies.get(name);
   } else {
     return null;
   }
@@ -27,10 +12,7 @@ export function getCookie(name) {
 
 export function setCookie(name, value, daysToLive) {
   if (typeof window !== 'undefined') {
-    // Encode value in order to escape semicolons, commas, and whitespace
-    var cookie = name + '=' + encodeURIComponent(value) + '; path=/;';
-
-    document.cookie = cookie;
+    Cookies.set(name, value, { expires: daysToLive || 100, path: '/' });
   }
 }
 
@@ -191,8 +173,7 @@ export async function checkServerStatus(setStatus) {
 export function ServerErrorMessage() {
   Swal.fire({
     title: 'Server Error!',
-    text:
-      'We are currently experiencing a problem with our server. Please come back later.',
+    text: 'We are currently experiencing a problem with our server. Please come back later.',
     type: 'error',
     showConfirmButton: false,
     allowEscapeKey: false,
