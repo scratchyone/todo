@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "npm run build; next export; echo \"\" > out/.nojekyll"
+    "export": "npm run build; next export; touch ./out/.nojekyll"
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^2.2.0",
