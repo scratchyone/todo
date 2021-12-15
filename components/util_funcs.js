@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
 export function getCookie(name) {
   if (typeof window !== 'undefined') {
-    Cookies.get(name);
+    return Cookies.get(name);
   } else {
     return null;
   }
@@ -18,8 +18,7 @@ export function setCookie(name, value, daysToLive) {
 
 export function delCookie(name) {
   if (typeof window !== 'undefined') {
-    document.cookie =
-      name + '= ; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
+    Cookies.remove(name);
   }
 }
 
