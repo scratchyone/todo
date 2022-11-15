@@ -14,7 +14,7 @@
     "classnames": "^2.2.6",
     "cssnano": "^4.1.10",
     "js-cookie": "^3.0.1",
-    "next": "^12.0.7",
+    "next": "^12.3.3",
     "postcss-mixins": "^6.2.3",
     "postcss-preset-env": "^6.7.0",
     "react": "^17.0.2",
